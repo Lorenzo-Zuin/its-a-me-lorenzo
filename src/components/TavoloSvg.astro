@@ -1,0 +1,147 @@
+---
+// Il tavolo visto dall'alto. Solo markup SVG: stili e comportamento in Tavolo.astro.
+---
+<svg class="tavolo__svg" viewBox="0 0 560 420" width="560" height="420" role="img" aria-label="Il mio tavolo visto dall'alto: raccoglitore, lente, monete, caffè, bacchette, sistema solare e tastiera">
+        <defs>
+          <clipPath id="bordo"><rect x="0" y="0" width="560" height="420" rx="24"/></clipPath>
+          <pattern id="feltro" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".7" fill="#000" opacity=".12"/></pattern>
+          <linearGradient id="oro" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3CC6A"/><stop offset=".55" stop-color="#DCA62E"/><stop offset="1" stop-color="#B9861F"/></linearGradient>
+          <linearGradient id="legnoChiaro" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E2C089"/><stop offset="1" stop-color="#B98A4E"/></linearGradient>
+          <radialGradient id="lente" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".5" stop-color="#BFD9F7" stop-opacity=".25"/><stop offset="1" stop-color="#7FB0E8" stop-opacity=".35"/></radialGradient>
+          <radialGradient id="cielo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#2F57AE"/><stop offset="1" stop-color="#1A2F66"/></radialGradient>
+          <clipPath id="lenteClip"><circle cx="0" cy="0" r="42"/></clipPath>
+        </defs>
+
+        <g clip-path="url(#bordo)">
+          <g class="strato strato--lontano">
+            <rect x="-40" y="-40" width="640" height="500" fill="#1F2233"/>
+            <rect x="-40" y="-40" width="640" height="500" fill="url(#feltro)"/>
+            <rect x="24" y="24" width="512" height="372" rx="18" fill="#2A6652"/>
+            <rect x="24" y="24" width="512" height="372" rx="18" fill="url(#feltro)"/>
+            <rect x="24" y="24" width="512" height="372" rx="18" fill="none" stroke="#1B4A3A" stroke-width="4"/>
+            <a href="/esperimenti" data-oggetto="9" aria-label="Esperimenti" class="ogg"><g transform="translate(40 362) rotate(-4)">
+              <rect x="0" y="0" width="300" height="110" rx="10" fill="#2E3350"/>
+              <rect x="6" y="6" width="288" height="98" rx="7" fill="#232741"/>
+              <g fill="#3A4060">
+                <rect x="14" y="14" width="18" height="16" rx="3"/><rect x="36" y="14" width="18" height="16" rx="3"/><rect x="58" y="14" width="18" height="16" rx="3"/><rect x="80" y="14" width="18" height="16" rx="3"/><rect x="102" y="14" width="18" height="16" rx="3"/><rect x="124" y="14" width="18" height="16" rx="3"/><rect x="146" y="14" width="18" height="16" rx="3"/><rect x="168" y="14" width="18" height="16" rx="3"/><rect x="190" y="14" width="18" height="16" rx="3"/><rect x="212" y="14" width="18" height="16" rx="3"/><rect x="234" y="14" width="18" height="16" rx="3"/><rect x="256" y="14" width="26" height="16" rx="3"/>
+                <rect x="20" y="34" width="18" height="16" rx="3"/><rect x="42" y="34" width="18" height="16" rx="3"/><rect class="tasto k1" x="64" y="34" width="18" height="16" rx="3"/><rect class="tasto k2" x="86" y="34" width="18" height="16" rx="3"/><rect x="108" y="34" width="18" height="16" rx="3"/><rect x="130" y="34" width="18" height="16" rx="3"/><rect class="tasto k5" x="152" y="34" width="18" height="16" rx="3"/><rect x="174" y="34" width="18" height="16" rx="3"/><rect x="196" y="34" width="18" height="16" rx="3"/><rect x="218" y="34" width="18" height="16" rx="3"/><rect x="240" y="34" width="18" height="16" rx="3"/><rect x="262" y="34" width="20" height="16" rx="3"/>
+                <rect x="26" y="54" width="18" height="16" rx="3"/><rect x="48" y="54" width="18" height="16" rx="3"/><rect class="tasto k3" x="70" y="54" width="18" height="16" rx="3"/><rect class="tasto k4" x="92" y="54" width="18" height="16" rx="3"/><rect x="114" y="54" width="18" height="16" rx="3"/><rect x="136" y="54" width="18" height="16" rx="3"/><rect x="158" y="54" width="18" height="16" rx="3"/><rect class="tasto k6" x="180" y="54" width="18" height="16" rx="3"/><rect x="202" y="54" width="18" height="16" rx="3"/><rect x="224" y="54" width="18" height="16" rx="3"/><rect x="246" y="54" width="36" height="16" rx="3"/>
+                <rect x="40" y="74" width="18" height="16" rx="3"/><rect x="62" y="74" width="18" height="16" rx="3"/><rect class="tasto k7" x="84" y="74" width="130" height="16" rx="3"/><rect x="218" y="74" width="18" height="16" rx="3"/><rect x="240" y="74" width="18" height="16" rx="3"/>
+              </g>
+              <rect x="124" y="54" width="18" height="16" rx="3" fill="#D4634A"/>
+            </g></a>
+          </g>
+
+          <g class="strato strato--medio">
+            <a href="#collezione" data-oggetto="1" aria-label="Il raccoglitore: vai ai progetti" class="ogg"><g id="raccoglitoreGruppo" transform="translate(270 205) rotate(-2)">
+              <rect x="-150" y="-100" width="300" height="200" rx="8" fill="#000" opacity=".25" transform="translate(6 10)"/>
+              <rect x="-150" y="-100" width="150" height="200" rx="8" fill="#F6F7FB"/>
+              <rect x="0" y="-100" width="150" height="200" rx="8" fill="#FFFFFF"/>
+              <rect x="-2" y="-100" width="4" height="200" fill="#C9CFDC"/>
+              <g fill="none" stroke="#9FA8BF" stroke-width="3"><circle cx="0" cy="-60" r="6"/><circle cx="0" cy="0" r="6"/><circle cx="0" cy="60" r="6"/></g>
+              <g fill="#E3E6EF">
+                <rect x="-138" y="-86" width="38" height="52" rx="3"/><rect x="-94" y="-86" width="38" height="52" rx="3"/><rect x="-50" y="-86" width="38" height="52" rx="3"/>
+                <rect x="-138" y="-26" width="38" height="52" rx="3"/><rect x="-94" y="-26" width="38" height="52" rx="3"/><rect x="-50" y="-26" width="38" height="52" rx="3"/>
+                <rect x="-138" y="34" width="38" height="52" rx="3"/><rect x="-94" y="34" width="38" height="52" rx="3"/><rect x="-50" y="34" width="38" height="52" rx="3"/>
+                <rect x="12" y="-86" width="38" height="52" rx="3"/><rect x="56" y="-86" width="38" height="52" rx="3"/><rect x="100" y="-86" width="38" height="52" rx="3"/>
+                <rect x="12" y="-26" width="38" height="52" rx="3"/><rect x="56" y="-26" width="38" height="52" rx="3"/><rect x="100" y="-26" width="38" height="52" rx="3"/>
+                <rect x="12" y="34" width="38" height="52" rx="3"/><rect x="56" y="34" width="38" height="52" rx="3"/><rect x="100" y="34" width="38" height="52" rx="3"/>
+              </g>
+              <rect x="-135" y="-83" width="32" height="46" rx="3" fill="#3D6BC2"/><rect x="-91" y="-83" width="32" height="46" rx="3" fill="#D4634A"/><rect x="-47" y="-83" width="32" height="46" rx="3" fill="#2F8A6B"/>
+              <rect x="-135" y="-23" width="32" height="46" rx="3" fill="#6D5BC9"/><rect x="-91" y="-23" width="32" height="46" rx="3" fill="#E8B33C"/>
+              <rect x="15" y="-83" width="32" height="46" rx="3" fill="#D4634A"/><rect x="59" y="-83" width="32" height="46" rx="3" fill="#3D6BC2"/>
+              <rect x="15" y="-23" width="32" height="46" rx="3" fill="#2A7B82"/><rect x="21" y="-17" width="20" height="3" rx="1.5" fill="#FFFFFF" opacity=".85"/>
+              <g class="nuova"><rect x="59" y="-23" width="32" height="46" rx="3" fill="#2F8A6B"/><rect x="65" y="-17" width="20" height="3" rx="1.5" fill="#FFFFFF" opacity=".85"/></g>
+              <g fill="#FFFFFF" opacity=".85"><rect x="-129" y="-77" width="20" height="3" rx="1.5"/><rect x="-85" y="-77" width="20" height="3" rx="1.5"/><rect x="-41" y="-77" width="20" height="3" rx="1.5"/><rect x="-129" y="-17" width="20" height="3" rx="1.5"/><rect x="21" y="-77" width="20" height="3" rx="1.5"/><rect x="65" y="-77" width="20" height="3" rx="1.5"/></g>
+              <text x="-75" y="94" text-anchor="middle" style="font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 7px; letter-spacing: .14em; fill: #9FA8BF">RACCOGLITORE · 01</text>
+              
+            </g></a>
+
+            <a href="/chi-sono" data-oggetto="2" aria-label="Astronomia: il sistema solare oggi, chi sono" class="ogg"><g transform="translate(80 92)">
+              <circle cx="4" cy="6" r="64" fill="#000" opacity=".25"/>
+              <circle r="64" fill="#F6F7FB"/>
+              <circle r="56" fill="url(#cielo)"/>
+              <circle r="56" fill="none" stroke="#F3CC6A" stroke-width="1"/>
+              <circle r="40" fill="none" stroke="#F3CC6A" stroke-opacity=".35" stroke-width=".8" stroke-dasharray="2 3"/>
+              <g fill="#F3CC6A" opacity=".8"><circle class="stellina" cx="-44" cy="-28" r="1.1"/><circle class="stellina" cx="40" cy="-34" r="1.3"/><circle class="stellina" cx="46" cy="22" r="1"/><circle class="stellina" cx="-38" cy="36" r="1.2"/><circle class="stellina" cx="8" cy="-50" r="1"/><circle class="stellina" cx="-50" cy="6" r="1"/></g>
+              <g fill="none" stroke="#9FC3FF" stroke-opacity=".45" stroke-width=".8"><circle r="14"/><circle r="23"/><circle r="33"/><circle r="45"/></g>
+              <g data-pianeta="mercurio"><circle cx="14" cy="0" r="1.8" fill="#C9D1E3"/></g>
+              <g data-pianeta="venere"><circle cx="23" cy="0" r="2.6" fill="#F3CC6A"/></g>
+              <g data-pianeta="terra"><circle cx="33" cy="0" r="3" fill="#5B9BE6"/><circle cx="33" cy="0" r="3" fill="none" stroke="#FFFFFF" stroke-opacity=".6" stroke-width=".8"/><circle cx="37.5" cy="-2.5" r="1" fill="#E3E6EF"/></g>
+              <g data-pianeta="marte"><circle cx="45" cy="0" r="2.2" fill="#D4634A"/></g>
+              <circle r="6" fill="#F3CC6A"/><circle r="9" fill="#F3CC6A" opacity=".25"/>
+            </g></a>
+
+            <a href="/contatti" data-oggetto="3" aria-label="Prendiamo un caffè: contatti" class="ogg"><g transform="translate(470 82)">
+              <circle cx="3" cy="5" r="40" fill="#000" opacity=".25"/>
+              <circle r="40" fill="#F6F7FB"/>
+              <circle r="34" fill="none" stroke="#DADFEA" stroke-width="1.2"/>
+              <path d="M24 -8 C 50 -10, 50 20, 24 16" fill="none" stroke="#1A1D2B" stroke-opacity=".18" stroke-width="11" stroke-linecap="round" transform="translate(2 3)"/>
+              <path d="M24 -8 C 50 -10, 50 20, 24 16" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+              <path d="M24 -8 C 50 -10, 50 20, 24 16" fill="none" stroke="#DADFEA" stroke-width="2" stroke-linecap="round" transform="translate(0 2)"/>
+              <circle r="30" fill="#FFFFFF"/>
+              <circle r="30" fill="none" stroke="#DADFEA" stroke-width="1.5"/>
+              <circle r="25" fill="#4A2E1B"/>
+              <circle r="25" fill="#5C3A22" opacity=".9"/>
+              <path d="M-13 -7 q10 -8 22 -2" fill="none" stroke="#FFFFFF" stroke-opacity=".25" stroke-width="3" stroke-linecap="round"/>
+              <g fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" opacity=".8">
+                <path class="vapore" d="M-10 -34 q-6 -10 0 -18 q6 -8 0 -16"/>
+                <path class="vapore" d="M2 -36 q-6 -10 0 -18 q6 -8 0 -16"/>
+                <path class="vapore" d="M14 -34 q-6 -10 0 -18 q6 -8 0 -16"/>
+              </g>
+            </g></a>
+          </g>
+
+          <g class="strato strato--vicino">
+            <a href="#musica" data-oggetto="4" data-azione="musica" aria-label="Suono la batteria: accendi la musica" class="ogg">
+            <g transform="translate(298 58) rotate(-8)">
+              <path d="M-88 0 L68 0" stroke="#000" stroke-opacity=".14" stroke-width="8" stroke-linecap="round" transform="translate(1 3)"/>
+              <path d="M-84 9 L72 9" stroke="#000" stroke-opacity=".14" stroke-width="8" stroke-linecap="round" transform="translate(1 3)"/>
+              <g class="bacch1"><path d="M-86 -3.4 L34 -3.1 Q52 -3 60 -1.6 L66 -0.8 Q70 0 66 0.8 L60 1.6 Q52 3 34 3.1 L-86 3.4 Q-90 3.4 -90 0 Q-90 -3.4 -86 -3.4 Z" fill="#E6C590"/><path d="M-84 -1.2 L30 -1 M-80 1.4 L26 1.3" stroke="#D1AD72" stroke-width=".7" stroke-linecap="round" opacity=".9"/><path d="M-90 0 Q-90 -3.4 -86 -3.4 L-74 -3.3 L-74 3.3 L-86 3.4 Q-90 3.4 -90 0 Z" fill="#C9A062"/><ellipse cx="70" cy="0" rx="5.2" ry="3.2" fill="#EBCF9E"/><ellipse cx="71" cy="-0.8" rx="2.2" ry="1" fill="#FFFFFF" opacity=".45"/></g>
+              <g transform="translate(4 9)"><g class="bacch2"><path d="M-86 -3.4 L34 -3.1 Q52 -3 60 -1.6 L66 -0.8 Q70 0 66 0.8 L60 1.6 Q52 3 34 3.1 L-86 3.4 Q-90 3.4 -90 0 Q-90 -3.4 -86 -3.4 Z" fill="#E6C590"/><path d="M-84 -1.2 L30 -1 M-80 1.4 L26 1.3" stroke="#D1AD72" stroke-width=".7" stroke-linecap="round" opacity=".9"/><path d="M-90 0 Q-90 -3.4 -86 -3.4 L-74 -3.3 L-74 3.3 L-86 3.4 Q-90 3.4 -90 0 Z" fill="#C9A062"/><ellipse cx="70" cy="0" rx="5.2" ry="3.2" fill="#EBCF9E"/><ellipse cx="71" cy="-0.8" rx="2.2" ry="1" fill="#FFFFFF" opacity=".45"/></g></g>
+            </g>
+          </a>
+
+            <a href="/chi-sono#collezioni" data-oggetto="5" aria-label="Colleziono monete e fiches: chi sono" class="ogg">
+            <g transform="translate(484 200)">
+              <g transform="translate(-26 16)"><circle cx="1.5" cy="2.5" r="15" fill="#000" opacity=".28"/><circle r="15" fill="#3D6BC2"/><g fill="#FFFFFF"><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(0)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(45)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(90)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(135)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(180)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(225)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(270)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(315)"/></g><circle r="9.5" fill="none" stroke="#FFFFFF" stroke-opacity=".85" stroke-width="1.3" stroke-dasharray="2.4 2"/><circle r="7" fill="#2F57A8"/><text y="2.8" text-anchor="middle" style="font-family: Urbanist, system-ui, sans-serif; font-weight: 900; font-size: 7px; fill: #FFFFFF">25</text></g>
+              <g transform="translate(0 2)"><circle cx="1.5" cy="2.5" r="15" fill="#000" opacity=".28"/><circle r="15" fill="#D4634A"/><g fill="#FFFFFF"><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(0)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(45)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(90)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(135)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(180)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(225)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(270)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(315)"/></g><circle r="9.5" fill="none" stroke="#FFFFFF" stroke-opacity=".85" stroke-width="1.3" stroke-dasharray="2.4 2"/><circle r="7" fill="#B84E38"/><text y="2.8" text-anchor="middle" style="font-family: Urbanist, system-ui, sans-serif; font-weight: 900; font-size: 7px; fill: #FFFFFF">50</text></g>
+              <g transform="translate(22 20)"><circle cx="1.5" cy="2.5" r="15" fill="#000" opacity=".28"/><circle r="15" fill="#1A1D2B"/><g fill="#F3CC6A"><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(0)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(45)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(90)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(135)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(180)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(225)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(270)"/><rect x="-2.2" y="-15" width="4.4" height="5.5" rx="1" transform="rotate(315)"/></g><circle r="9.5" fill="none" stroke="#F3CC6A" stroke-opacity=".85" stroke-width="1.3" stroke-dasharray="2.4 2"/><circle r="7" fill="#2E3350"/><text y="2.8" text-anchor="middle" style="font-family: Urbanist, system-ui, sans-serif; font-weight: 900; font-size: 7px; fill: #F3CC6A">100</text></g>
+              <g transform="translate(30 -30)"><g class="moneta"><circle cx="1.5" cy="2.5" r="14" fill="#000" opacity=".28"/><circle r="14" fill="url(#oro)"/><circle r="10.5" fill="none" stroke="#9A6E14" stroke-width="1"/><circle r="10.5" fill="none" stroke="#FFF1C2" stroke-opacity=".5" stroke-width=".6" stroke-dasharray="1 1.5"/><circle r="6" fill="none" stroke="#9A6E14" stroke-opacity=".6" stroke-width="1.2"/></g></g>
+              <g transform="translate(4 -36)"><g class="moneta"><circle cx="1.5" cy="2.5" r="11" fill="#000" opacity=".28"/><circle r="11" fill="#D5DBE8"/><circle r="7.5" fill="none" stroke="#8A93A8" stroke-width="1"/><circle r="4" fill="#C3CAD9"/><path d="M-4 -3 L0 -7 L4 -3 L0 4 Z" fill="#8A93A8" opacity=".7"/></g></g>
+              <g transform="translate(-24 -18)"><g class="moneta"><circle cx="1.5" cy="2.5" r="12" fill="#000" opacity=".28"/><circle r="12" fill="#C98A5B"/><circle r="8.5" fill="none" stroke="#8C5A33" stroke-width="1"/><circle r="5" fill="#B6764A"/><path d="M-5 0 h10 M0 -5 v10" stroke="#8C5A33" stroke-width="1.4" stroke-linecap="round"/></g></g>
+            </g>
+          </a>
+
+            <a href="/chi-sono#collezioni" data-oggetto="6" aria-label="Colleziono carte: chi sono" class="ogg"><g transform="translate(74 250)">
+              <rect x="-26" y="-36" width="52" height="72" rx="4" fill="#000" opacity=".25" transform="translate(4 6)"/>
+              <rect x="-26" y="-36" width="52" height="72" rx="4" fill="#3D6BC2"/>
+              <rect x="-21" y="-31" width="42" height="62" rx="3" fill="none" stroke="#F3CC6A" stroke-width="1.2"/>
+              <path d="M0 -14 L8 0 L0 14 L-8 0 Z" fill="#F3CC6A"/>
+              <g class="cartaScivola"><rect x="-26" y="-36" width="52" height="72" rx="4" fill="#FFFFFF"/><rect x="-21" y="-31" width="42" height="62" rx="3" fill="none" stroke="#C9CFDC" stroke-width="1"/><text x="-18" y="-20" style="font-family: Urbanist, system-ui, sans-serif; font-weight: 900; font-size: 11px; fill: #D4634A">A</text><path d="M0 -10 L7 0 L0 10 L-7 0 Z" fill="#D4634A"/></g>
+            </g></a>
+
+            
+
+            <a href="#collezione" data-oggetto="8" aria-label="Tutta la collezione" class="ogg">
+            <g transform="translate(398 270) rotate(32)">
+              <g class="lenteBob">
+                <path d="M46 0 L104 0" stroke="#1A1D2B" stroke-width="15" stroke-linecap="round"/>
+                <path d="M62 0 L100 0" stroke="#2E3350" stroke-width="9" stroke-linecap="round"/>
+                <path d="M46 0 L58 0" stroke="#F3CC6A" stroke-width="15"/>
+                <circle cx="3" cy="5" r="48" fill="#000" opacity=".22"/>
+                <circle r="48" fill="#1A1D2B"/>
+                <circle r="42" fill="#FFFFFF"/>
+                <g clip-path="url(#lenteClip)"><rect x="-42" y="-42" width="84" height="84" fill="#2A6652"/><rect x="-42" y="-42" width="84" height="84" fill="url(#feltro)"/><g transform="rotate(-32) scale(1.7) translate(-398 -270)"><use href="#raccoglitoreGruppo"/></g></g>
+                <circle r="42" fill="url(#lente)"/>
+                <circle r="42" fill="none" stroke="#FFFFFF" stroke-opacity=".6" stroke-width="1.5"/>
+                <circle r="45" fill="none" stroke="#F3CC6A" stroke-width="2"/>
+                <path d="M-24 -22 q8 -14 26 -16" fill="none" stroke="#FFFFFF" stroke-opacity=".85" stroke-width="3" stroke-linecap="round"/>
+              </g>
+            </g>
+          </a>
+          </g>
+
+
+        </g>
+      </svg>

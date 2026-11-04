@@ -1,0 +1,24 @@
+---
+// Saturno: intestazione della pagina «Chi sono». Entra ruotando quando si arriva dal sistema solare.
+---
+<svg class="saturno" viewBox="-110 -70 220 140" width="300" height="190" role="img" aria-label="Saturno con gli anelli">
+  <defs>
+    <radialGradient id="satG" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#F3DFA6"/><stop offset=".6" stop-color="#D9B46A"/><stop offset="1" stop-color="#9A7A3A"/></radialGradient>
+    <linearGradient id="anelloG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C9B27A" stop-opacity=".2"/><stop offset=".5" stop-color="#E8D5A0"/><stop offset="1" stop-color="#C9B27A" stop-opacity=".2"/></linearGradient>
+    <clipPath id="satDietro"><rect x="-110" y="-70" width="220" height="70"/></clipPath>
+    <clipPath id="satDavanti"><rect x="-110" y="0" width="220" height="70"/></clipPath>
+  </defs>
+  <g transform="rotate(-18)">
+    <g clip-path="url(#satDietro)"><ellipse rx="96" ry="26" fill="none" stroke="url(#anelloG)" stroke-width="14"/><ellipse rx="78" ry="21" fill="none" stroke="#1A1D2B" stroke-opacity=".25" stroke-width="2"/></g>
+    <circle r="46" fill="url(#satG)"/>
+    <g fill="none" stroke="#B89650" stroke-opacity=".35" stroke-width="3"><path d="M-44 -12 q44 -6 88 0"/><path d="M-46 6 q46 8 92 0"/><path d="M-40 24 q40 6 80 0"/></g>
+    <g clip-path="url(#satDavanti)"><ellipse rx="96" ry="26" fill="none" stroke="url(#anelloG)" stroke-width="14"/><ellipse rx="78" ry="21" fill="none" stroke="#1A1D2B" stroke-opacity=".25" stroke-width="2"/></g>
+  </g>
+</svg>
+
+<style>
+  .saturno { filter: drop-shadow(0 24px 30px rgba(26, 29, 43, 0.25)); max-width: 100%; height: auto; }
+  :global(html[data-arrivo='cielo']) .saturno { animation: entraSaturno 1s var(--curva-arrivo) 0.15s both; }
+  @keyframes entraSaturno { from { opacity: 0; transform: scale(0.3) rotate(-30deg); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { :global(html[data-arrivo='cielo']) .saturno { animation: none; } }
+</style>

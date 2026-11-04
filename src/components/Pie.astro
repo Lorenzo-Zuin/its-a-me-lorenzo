@@ -1,0 +1,28 @@
+---
+import Spotify from '@/components/Spotify.tsx';
+---
+
+<footer class="pie" id="pie">
+  <div class="pie__dentro contenitore">
+    <Spotify client:visible transition:persist />
+    <nav class="pie__link" aria-label="Contatti">
+      <a href="https://github.com/Lorenzo-Zuin">GITHUB</a>
+      <a href="#">LINKEDIN</a>
+      <a href="/contatti">EMAIL</a>
+      <span>© LORENZO ZUIN</span>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  .pie {
+    position: sticky; bottom: 0; z-index: 5; margin-top: auto;
+    background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid var(--linea);
+  }
+  .pie__dentro {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    padding-top: 8px; padding-bottom: 8px;
+  }
+  .pie__link { display: flex; gap: 22px; flex-wrap: wrap; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; color: var(--inchiostro-2); }
+</style>

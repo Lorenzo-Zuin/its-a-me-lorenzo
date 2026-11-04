@@ -1,0 +1,29 @@
+---
+import Base from '@/layouts/Base.astro';
+import { progetti } from '@/data/progetti';
+---
+
+<Base titolo="Tutta la collezione" descrizione="Tutti i progetti di Lorenzo Zuin: siti, app, programmi e repository.">
+  <section class="pagina contenitore">
+    <div class="pagina__testa">
+      <a class="bottone bottone--chiaro torna" href="/">← Torna al tavolo</a>
+      <p class="etichetta-mono">Tutta la collezione</p>
+      <h1 class="titolo">Ogni progetto, una carta.</h1>
+      <p class="intro">[Qui l'elenco completo, con filtri per tipo e stato. Per ora: le carte del raccoglitore.]</p>
+    </div>
+    <ul class="elenco">
+      {progetti.map((p) => (
+        <li class="scheda">
+          <p class="etichetta-mono">{p.tipo} · {p.stato}</p>
+          <p><strong>{p.nome}</strong></p>
+          <p class="segnaposto">{p.riga}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .torna { align-self: flex-start; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; font-weight: 500; padding: 10px 16px; }
+  .elenco { list-style: none; padding: 0; margin: 32px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 14px; }
+</style>

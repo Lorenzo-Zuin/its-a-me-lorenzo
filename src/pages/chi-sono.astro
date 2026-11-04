@@ -1,0 +1,46 @@
+---
+import Base from '@/layouts/Base.astro';
+import Saturno from '@/components/Saturno.astro';
+---
+
+<Base titolo="Chi sono" descrizione="Lorenzo Zuin: software engineer a Venezia, astronomia, collezioni, batteria.">
+  <div class="copertura copertura--cielo" aria-hidden="true"></div>
+  <section class="pagina contenitore">
+    <div class="pagina__testa pagina__testa--centro">
+      <a class="bottone bottone--chiaro torna" href="/">← Torna al tavolo</a>
+      <Saturno />
+      <p class="etichetta-mono">Chi sono</p>
+      <h1 class="titolo">Lorenzo, software engineer a Venezia.</h1>
+      <p class="intro">[Tre righe su di te: cosa fai di giorno, cosa costruisci di sera, cosa ti incuriosisce.]</p>
+    </div>
+    <div class="griglia-schede sezioni">
+      <article class="scheda" id="astronomia">
+        <p class="etichetta-mono" style="color: var(--oro-scuro)">Astronomia</p>
+        <p><strong>L'universo, la fisica, la chimica.</strong></p>
+        <p class="segnaposto">[Due righe.]</p>
+      </article>
+      <article class="scheda" id="collezioni">
+        <p class="etichetta-mono" style="color: var(--blu)">Collezioni</p>
+        <p><strong>Monete, carte da gioco, carte Pokémon.</strong></p>
+        <p class="segnaposto">[Due righe. Qui ci staranno le foto dei pezzi.]</p>
+      </article>
+      <article class="scheda" id="batteria">
+        <p class="etichetta-mono" style="color: var(--corallo)">Batteria</p>
+        <p><strong>Da un paio d'anni, per passione.</strong></p>
+        <p class="segnaposto">[Due righe.]</p>
+      </article>
+      <article class="scheda" id="giochi">
+        <p class="etichetta-mono" style="color: var(--verde)">Giochi</p>
+        <p><strong>Da tavolo e al computer.</strong></p>
+        <p class="segnaposto">[Due righe.]</p>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .copertura--cielo { background: radial-gradient(circle at 50% 50%, #2b54ac 0%, #1a2f66 70%, #0f1c40 100%); }
+  .pagina__testa--centro { margin: 0 auto; align-items: center; text-align: center; max-width: 860px; }
+  .torna { align-self: flex-start; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; font-weight: 500; padding: 10px 16px; }
+  .sezioni { margin-top: 32px; }
+</style>

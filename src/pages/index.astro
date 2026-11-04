@@ -1,0 +1,40 @@
+---
+import Base from '@/layouts/Base.astro';
+import Tavolo from '@/components/Tavolo.astro';
+import Raccoglitore from '@/components/Raccoglitore.astro';
+---
+
+<Base titolo="Home">
+  <section class="hero contenitore">
+    <div class="hero__testo">
+      <p class="etichetta-mono">Software engineer · Venezia, Italia</p>
+      <h1 class="titolo hero__titolo">
+        Lorenzo Zuin.<br />Creo <span style="color: var(--blu)">siti</span>, <span style="color: var(--corallo)">app</span> e <span style="color: var(--verde)">programmi</span>.
+      </h1>
+      <p class="hero__riga">
+        Qui tengo i siti, i programmi e i repository che ho fatto e che farò. Sul tavolo, le cose che mi piacciono: ognuna porta a una
+        parte del sito.
+      </p>
+      <div class="hero__azioni">
+        <a class="bottone bottone--pieno" href="#collezione">Apri il raccoglitore</a>
+        <a class="bottone bottone--chiaro" href="/contatti">Scrivimi</a>
+      </div>
+    </div>
+    <Tavolo />
+  </section>
+  <Raccoglitore />
+</Base>
+
+<style>
+  .hero {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 32px;
+    padding-top: 16px; padding-bottom: 48px;
+  }
+  .hero__testo { display: flex; flex-direction: column; gap: 20px; max-width: 560px; flex: 1 1 440px; min-width: 0; }
+  .hero__titolo { font-size: clamp(40px, 5.2vw, 66px); }
+  .hero__riga { margin: 0; font-size: 18px; line-height: 1.55; color: var(--inchiostro-2); max-width: 500px; text-wrap: pretty; }
+  .hero__azioni { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  @media (max-width: 900px) {
+    .hero { padding-top: 8px; padding-bottom: 32px; gap: 24px; }
+  }
+</style>

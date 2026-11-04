@@ -1,0 +1,157 @@
+/* Token del sito: colori, caratteri, ritmo. Tutto il resto li usa. */
+:root {
+  --fondo: #f6f7fb;
+  --carta: #ffffff;
+  --inchiostro: #1a1d2b;
+  --inchiostro-2: #4c5165;
+  --linea: #e3e6ef;
+  --blu: #3d6bc2;
+  --corallo: #d4634a;
+  --verde: #2f8a6b;
+  --viola: #6d5bc9;
+  --oro: #e8b33c;
+  --oro-scuro: #b07a1a;
+  --acqua: #2a7b82;
+  --panno: #2a6652;
+
+  --font-titoli: 'Urbanist', system-ui, sans-serif;
+  --font-testo: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --raggio: 24px;
+  --ombra-morbida: 0 1px 2px rgba(26, 29, 43, 0.06), 0 14px 30px -18px rgba(26, 29, 43, 0.3);
+  --curva-arrivo: cubic-bezier(0.16, 1, 0.3, 1);
+  --larghezza: 1240px;
+  --gutter: 48px;
+}
+
+@media (max-width: 900px) {
+  :root { --gutter: 20px; }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--inchiostro);
+  font-family: var(--font-testo);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--blu); }
+a:hover { color: var(--inchiostro); }
+
+img, svg { display: block; max-width: 100%; }
+
+button { font: inherit; }
+
+.contenitore {
+  max-width: var(--larghezza);
+  width: 100%;
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.etichetta-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--inchiostro-2);
+}
+
+.titolo {
+  margin: 0;
+  font-family: var(--font-titoli);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+
+.bottone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 20px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: transform 0.2s var(--curva-arrivo), background 0.2s;
+}
+.bottone:hover { transform: translateY(-2px); }
+.bottone--pieno { background: var(--inchiostro); color: #fff; box-shadow: 0 10px 24px -10px rgba(26, 29, 43, 0.7); }
+.bottone--pieno:hover { background: var(--blu); color: #fff; }
+.bottone--chiaro { background: var(--carta); color: var(--inchiostro); box-shadow: var(--ombra-morbida); }
+.bottone--chiaro:hover { color: var(--inchiostro); }
+
+.pagina {
+  padding: 56px 0 120px;
+}
+.pagina__testa {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 760px;
+}
+.pagina h1 { font-size: clamp(40px, 6vw, 64px); }
+.pagina p.intro { margin: 0; font-size: 18px; color: var(--inchiostro-2); max-width: 600px; text-wrap: pretty; }
+
+.scheda {
+  background: var(--carta);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: var(--ombra-morbida);
+}
+.scheda p { margin: 0; }
+.scheda .etichetta-mono { font-size: 11px; margin-bottom: 6px; }
+.scheda .segnaposto { color: var(--inchiostro-2); font-size: 14px; margin-top: 6px; }
+
+.griglia-schede {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 14px;
+}
+
+/* Copertura all'arrivo da una transizione di scena (vedi Tavolo.astro). */
+.copertura {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+}
+html[data-arrivo='caffe'] .copertura--caffe,
+html[data-arrivo='cielo'] .copertura--cielo {
+  opacity: 1;
+  animation: svela 0.55s var(--curva-arrivo) 0.05s forwards;
+}
+@keyframes svela { to { opacity: 0; } }
+html[data-arrivo] .pagina__testa > * {
+  animation: sale 0.7s var(--curva-arrivo) both;
+}
+html[data-arrivo] .pagina__testa > *:nth-child(2) { animation-delay: 0.06s; }
+html[data-arrivo] .pagina__testa > *:nth-child(3) { animation-delay: 0.12s; }
+html[data-arrivo] .pagina__testa > *:nth-child(4) { animation-delay: 0.18s; }
+@keyframes sale {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.15s !important;
+  }
+  html[data-arrivo] .pagina__testa > * { animation: none; }
+}

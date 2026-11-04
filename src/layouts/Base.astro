@@ -1,0 +1,55 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Testata from '@/components/Testata.astro';
+import Pie from '@/components/Pie.astro';
+import '@/styles/global.css';
+
+interface Props {
+  titolo: string;
+  descrizione?: string;
+}
+
+const { titolo, descrizione = 'Lorenzo Zuin, software engineer a Venezia. Siti, app e programmi che ho fatto e che farò.' } = Astro.props;
+const titoloCompleto = titolo === 'Home' ? 'Lorenzo Zuin' : `${titolo} · Lorenzo Zuin`;
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titoloCompleto}</title>
+    <meta name="description" content={descrizione} />
+    <meta name="theme-color" content="#f6f7fb" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+    />
+    <ClientRouter />
+  </head>
+  <body>
+    <Testata />
+    <main>
+      <slot />
+    </main>
+    <Pie />
+    <script>
+      // All'arrivo da una transizione di scena, la pagina nuova parte coperta e si svela (vedi global.css).
+      import { navigate } from 'astro:transitions/client';
+      void navigate; // mantiene attivo il router lato client anche sulle pagine senza isole
+      const applica = () => {
+        const arrivo = sessionStorage.getItem('arrivo');
+        if (arrivo) {
+          document.documentElement.dataset.arrivo = arrivo;
+          sessionStorage.removeItem('arrivo');
+          window.setTimeout(() => delete document.documentElement.dataset.arrivo, 1400);
+        }
+      };
+      applica();
+      document.addEventListener('astro:page-load', applica);
+    </script>
+  </body>
+</html>
