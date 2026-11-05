@@ -6,3 +6,6 @@ dist/
 !.env.example
 .DS_Store
 npm-debug.log*
+
+# Cartelle di lavoro dell orchestrazione
+.claude/orchestra/lavori/
