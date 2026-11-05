@@ -121,7 +121,8 @@ button { font: inherit; }
   gap: 14px;
 }
 
-/* Copertura all'arrivo da una transizione di scena (vedi Tavolo.astro). */
+/* Copertura all'arrivo da una transizione di scena (vedi src/lib/viaggio.ts e Base.astro).
+   Il colore e il centro del gradiente sono quelli dell'ultimo fotogramma della scena, così non c'è scatto. */
 .copertura {
   position: fixed;
   inset: 0;
@@ -129,18 +130,54 @@ button { font: inherit; }
   pointer-events: none;
   opacity: 0;
 }
-html[data-arrivo='caffe'] .copertura--caffe,
-html[data-arrivo='cielo'] .copertura--cielo {
+html[data-arrivo] .copertura {
   opacity: 1;
-  animation: svela 0.55s var(--curva-arrivo) 0.05s forwards;
+  animation: svela 0.5s var(--curva-arrivo) 0.2s forwards;
 }
+html[data-arrivo='caffe'] .copertura {
+  background: radial-gradient(circle var(--arrivo-r, 120vmax) at var(--arrivo-x, 50%) var(--arrivo-y, 50%), #6b4529 0%, #4a2e1b 45%, #2c1a0e 100%);
+}
+html[data-arrivo='cielo'] .copertura {
+  background: radial-gradient(circle var(--arrivo-r, 120vmax) at var(--arrivo-x, 50%) var(--arrivo-y, 50%), #2b54ac 0%, #1a2f66 70%, #0f1c40 100%);
+}
+html[data-arrivo='moneta'] .copertura {
+  background: radial-gradient(circle var(--arrivo-r, 120vmax) at var(--arrivo-x, 50%) var(--arrivo-y, 50%), #f3cc6a 0%, #dca62e 55%, #b9861f 100%);
+}
+html[data-arrivo='carte'] .copertura { background: #3d6bc2; }
+html[data-arrivo='tastiera'] .copertura { background: #232741; }
 @keyframes svela { to { opacity: 0; } }
+
+/* Dal caffè la pagina emerge come un cerchio chiaro che si apre dal centro. */
+html[data-arrivo='caffe'] main {
+  position: relative;
+  z-index: 41;
+  background: var(--fondo);
+  animation: apre 0.8s var(--curva-arrivo) both;
+}
+@keyframes apre {
+  from { clip-path: circle(0px at 50% 42%); }
+  to { clip-path: circle(85vmax at 50% 42%); }
+}
+
+/* Dalla moneta e dalle carte si arriva alla scheda delle collezioni, che si fa notare. */
+html[data-arrivo='moneta'] #collezioni,
+html[data-arrivo='carte'] #collezioni {
+  animation: evidenzia 1.2s var(--curva-arrivo) 0.35s both;
+}
+@keyframes evidenzia {
+  0% { transform: scale(1); box-shadow: var(--ombra-morbida), 0 0 0 0 rgba(232, 179, 60, 0); }
+  30% { transform: scale(1.03); box-shadow: var(--ombra-morbida), 0 0 0 6px rgba(232, 179, 60, 0.55); }
+  100% { transform: scale(1); box-shadow: var(--ombra-morbida), 0 0 0 0 rgba(232, 179, 60, 0); }
+}
+
+/* I testi della testa di pagina salgono a scalare. */
 html[data-arrivo] .pagina__testa > * {
   animation: sale 0.7s var(--curva-arrivo) both;
 }
 html[data-arrivo] .pagina__testa > *:nth-child(2) { animation-delay: 0.06s; }
 html[data-arrivo] .pagina__testa > *:nth-child(3) { animation-delay: 0.12s; }
 html[data-arrivo] .pagina__testa > *:nth-child(4) { animation-delay: 0.18s; }
+html[data-arrivo] .pagina__testa > *:nth-child(5) { animation-delay: 0.24s; }
 @keyframes sale {
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
@@ -154,4 +191,7 @@ html[data-arrivo] .pagina__testa > *:nth-child(4) { animation-delay: 0.18s; }
     transition-duration: 0.15s !important;
   }
   html[data-arrivo] .pagina__testa > * { animation: none; }
+  /* La dissolvenza di arrivo resta di 0,25 s: la regola sopra azzera le durate con !important. */
+  html[data-arrivo] .copertura { animation: svela 0.25s linear 0s forwards; animation-duration: 0.25s !important; }
+  html[data-arrivo='caffe'] main, html[data-arrivo] #collezioni { animation: none; }
 }

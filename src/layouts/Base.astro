@@ -36,20 +36,33 @@ const titoloCompleto = titolo === 'Home' ? 'Lorenzo Zuin' : `${titolo} · Lorenz
       <slot />
     </main>
     <Pie />
+    <div class="copertura" aria-hidden="true"></div>
     <script>
-      // All'arrivo da una transizione di scena, la pagina nuova parte coperta e si svela (vedi global.css).
-      import { navigate } from 'astro:transitions/client';
-      void navigate; // mantiene attivo il router lato client anche sulle pagine senza isole
-      const applica = () => {
+      // All'arrivo da una transizione di scena la pagina nuova parte coperta dello stesso colore
+      // dell'ultimo fotogramma e si svela (vedi global.css, `html[data-arrivo]`).
+      // Il dato si applica al documento nuovo prima dello scambio, così non c'è nessun fotogramma scoperto.
+      import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+      const CHIAVI = ['arrivo', 'arrivo-x', 'arrivo-y', 'arrivo-r'] as const;
+      let timer = 0;
+      const applica = (doc: Document) => {
         const arrivo = sessionStorage.getItem('arrivo');
-        if (arrivo) {
-          document.documentElement.dataset.arrivo = arrivo;
-          sessionStorage.removeItem('arrivo');
-          window.setTimeout(() => delete document.documentElement.dataset.arrivo, 1400);
-        }
+        if (!arrivo) return;
+        const radice = doc.documentElement;
+        radice.dataset.arrivo = arrivo;
+        radice.style.setProperty('--arrivo-x', sessionStorage.getItem('arrivo-x') ?? '50%');
+        radice.style.setProperty('--arrivo-y', sessionStorage.getItem('arrivo-y') ?? '50%');
+        radice.style.setProperty('--arrivo-r', sessionStorage.getItem('arrivo-r') ?? '120vmax');
+        CHIAVI.forEach((k) => sessionStorage.removeItem(k));
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          delete document.documentElement.dataset.arrivo;
+          document.documentElement.style.removeProperty('--arrivo-x');
+          document.documentElement.style.removeProperty('--arrivo-y');
+          document.documentElement.style.removeProperty('--arrivo-r');
+        }, 1600);
       };
-      applica();
-      document.addEventListener('astro:page-load', applica);
+      applica(document);
+      document.addEventListener('astro:before-swap', (e) => applica((e as TransitionBeforeSwapEvent).newDocument));
     </script>
   </body>
 </html>
