@@ -36,20 +36,46 @@ const titoloCompleto = titolo === 'Home' ? 'Lorenzo Zuin' : `${titolo} · Lorenz
       <slot />
     </main>
     <Pie />
+    <div class="copertura" aria-hidden="true"></div>
     <script>
-      // All'arrivo da una transizione di scena, la pagina nuova parte coperta e si svela (vedi global.css).
-      import { navigate } from 'astro:transitions/client';
-      void navigate; // mantiene attivo il router lato client anche sulle pagine senza isole
-      const applica = () => {
+      // All'arrivo da una transizione di scena la pagina nuova parte coperta dello stesso colore
+      // dell'ultimo fotogramma e si svela (vedi global.css, `html[data-arrivo]`).
+      // Il dato si applica al documento nuovo prima dello scambio, così non c'è nessun fotogramma scoperto.
+      // Vale solo per la navigazione della scena che l'ha salvato (`navigate(dest, { info: { scena } })`):
+      // un link, Indietro o un ricaricamento durante la scena arrivano senza copertura.
+      import { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+      const CHIAVI = ['arrivo', 'arrivo-x', 'arrivo-y', 'arrivo-r'] as const;
+      let timer = 0;
+      const scenaDi = (info: unknown): string | null =>
+        typeof info === 'object' && info !== null && 'scena' in info && typeof info.scena === 'string' ? info.scena : null;
+      const applica = (doc: Document, scena: string | null) => {
         const arrivo = sessionStorage.getItem('arrivo');
-        if (arrivo) {
-          document.documentElement.dataset.arrivo = arrivo;
-          sessionStorage.removeItem('arrivo');
-          window.setTimeout(() => delete document.documentElement.dataset.arrivo, 1400);
-        }
+        const x = sessionStorage.getItem('arrivo-x') ?? '50%';
+        const y = sessionStorage.getItem('arrivo-y') ?? '50%';
+        const r = sessionStorage.getItem('arrivo-r') ?? '120vmax';
+        CHIAVI.forEach((k) => sessionStorage.removeItem(k));
+        if (!arrivo || arrivo !== scena) return;
+        const radice = doc.documentElement;
+        radice.dataset.arrivo = arrivo;
+        radice.style.setProperty('--arrivo-x', x);
+        radice.style.setProperty('--arrivo-y', y);
+        radice.style.setProperty('--arrivo-r', r);
+        window.clearTimeout(timer);
+        // Dal caffè `main` sta sopra la copertura (z-index 41) e quindi anche sopra il piè di pagina:
+        // si chiude appena finiti il cerchio (0,8 s) e i testi che salgono (0,94 s), così il piè non resta nascosto.
+        const durata = arrivo === 'caffe' ? 1000 : 1600;
+        timer = window.setTimeout(() => {
+          delete document.documentElement.dataset.arrivo;
+          document.documentElement.style.removeProperty('--arrivo-x');
+          document.documentElement.style.removeProperty('--arrivo-y');
+          document.documentElement.style.removeProperty('--arrivo-r');
+        }, durata);
       };
-      applica();
-      document.addEventListener('astro:page-load', applica);
+      // Al caricamento completo non c'è nessuna scena in volo: eventuali dati rimasti si buttano.
+      applica(document, null);
+      document.addEventListener('astro:before-swap', (e) => {
+        if (e instanceof TransitionBeforeSwapEvent) applica(e.newDocument, scenaDi(e.info));
+      });
     </script>
   </body>
 </html>
