@@ -241,6 +241,9 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
       if (naviga) {
         v.segnaArrivo();
         await navigate(voce.dest, { info: { scena: voce.scena } });
+        // Se il tavolo è ancora nel documento, la navigazione è stata interrotta senza preparazione
+        // (un'ancora nella stessa pagina, Indietro a un'ancora): si chiude la scena come per un'altra navigazione.
+        if (viaggio.isConnected) interrompi?.();
         return;
       }
       chiudi();
