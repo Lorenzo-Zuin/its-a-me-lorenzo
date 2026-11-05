@@ -159,15 +159,32 @@ html[data-arrivo='caffe'] main {
   to { clip-path: circle(85vmax at 50% 42%); }
 }
 
-/* Dalla moneta e dalle carte si arriva alla scheda delle collezioni, che si fa notare. */
+/* Dalla moneta e dalle carte si arriva alla scheda delle collezioni, che si fa notare:
+   si gonfia appena e un anello d'oro fermo (::after) compare e svanisce. Si animano solo transform e opacity. */
 html[data-arrivo='moneta'] #collezioni,
 html[data-arrivo='carte'] #collezioni {
+  position: relative;
   animation: evidenzia 1.2s var(--curva-arrivo) 0.35s both;
 }
+html[data-arrivo='moneta'] #collezioni::after,
+html[data-arrivo='carte'] #collezioni::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 6px rgba(232, 179, 60, 0.55);
+  pointer-events: none;
+  animation: anelloOro 1.2s var(--curva-arrivo) 0.35s both;
+}
 @keyframes evidenzia {
-  0% { transform: scale(1); box-shadow: var(--ombra-morbida), 0 0 0 0 rgba(232, 179, 60, 0); }
-  30% { transform: scale(1.03); box-shadow: var(--ombra-morbida), 0 0 0 6px rgba(232, 179, 60, 0.55); }
-  100% { transform: scale(1); box-shadow: var(--ombra-morbida), 0 0 0 0 rgba(232, 179, 60, 0); }
+  0% { transform: scale(1); }
+  30% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+@keyframes anelloOro {
+  0% { opacity: 0; transform: scale(0.98); }
+  30% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
 }
 
 /* I testi della testa di pagina salgono a scalare. */
@@ -193,5 +210,10 @@ html[data-arrivo] .pagina__testa > *:nth-child(5) { animation-delay: 0.24s; }
   html[data-arrivo] .pagina__testa > * { animation: none; }
   /* La dissolvenza di arrivo resta di 0,25 s: la regola sopra azzera le durate con !important. */
   html[data-arrivo] .copertura { animation: svela 0.25s linear 0s forwards; animation-duration: 0.25s !important; }
-  html[data-arrivo='caffe'] main, html[data-arrivo] #collezioni { animation: none; }
+  html[data-arrivo='caffe'] main, html[data-arrivo] #collezioni, html[data-arrivo] #collezioni::after { animation: none; }
+  html[data-arrivo] #collezioni::after { opacity: 0; }
+  /* La dissolvenza di uscita va al colore piatto della scena (viaggio.ts): l'arrivo riparte dallo stesso colore. */
+  html[data-arrivo='caffe'] .copertura { background: #4a2e1b; }
+  html[data-arrivo='cielo'] .copertura { background: #1a2f66; }
+  html[data-arrivo='moneta'] .copertura { background: #dca62e; }
 }

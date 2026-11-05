@@ -9,14 +9,7 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
     <span class="tavolo__testo" data-didascalia>Benvenuto sul mio tavolo. Tocca pure, non si rompe niente.</span>
   </p>
   <div class="viaggio" data-viaggio aria-hidden="true">
-    <svg class="viaggio__svg" data-viaggio-svg viewBox="0 0 100 100" preserveAspectRatio="none">
-      <defs>
-        <radialGradient id="vCaffe" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6b4529"/><stop offset=".45" stop-color="#4a2e1b"/><stop offset="1" stop-color="#2c1a0e"/></radialGradient>
-        <radialGradient id="vCielo" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#2b54ac"/><stop offset=".7" stop-color="#1a2f66"/><stop offset="1" stop-color="#0f1c40"/></radialGradient>
-        <radialGradient id="vOro" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F3CC6A"/><stop offset=".55" stop-color="#DCA62E"/><stop offset="1" stop-color="#B9861F"/></radialGradient>
-        <radialGradient id="vVetro" cx="35%" cy="30%" r="70%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".5" stop-color="#BFD9F7" stop-opacity=".3"/><stop offset="1" stop-color="#7FB0E8" stop-opacity=".4"/></radialGradient>
-      </defs>
-    </svg>
+    <svg class="viaggio__svg" data-viaggio-svg viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
   </div>
 </div>
 
@@ -73,11 +66,11 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
   .bacch2{animation-delay:-.65s}
   @keyframes suona{0%,100%{transform:rotate(0)}18%{transform:rotate(-2.2deg)}30%{transform:rotate(.6deg)}42%{transform:rotate(0)}}
 
-  /* Transizioni di scena: uno SVG a tutto schermo in cui ogni oggetto disegna la sua sequenza (src/lib/viaggio.ts). */
-  .viaggio { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: none; }
+  /* Transizioni di scena (src/lib/viaggio.ts): strati HTML a tutto schermo creati dalla scena,
+     sopra di loro uno SVG per gli anelli sottili. A riposo il contenitore non c'è (display: none). */
+  .viaggio { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: none; overflow: hidden; }
   .viaggio--attivo { display: block; }
-  .viaggio__svg { width: 100%; height: 100%; overflow: visible; }
-  .viaggio__svg > g, .viaggio__svg > g > * { will-change: transform, opacity; }
+  .viaggio__svg { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; max-width: none; overflow: visible; }
 
   @media (prefers-reduced-motion: reduce) {
     .strato { transition: none; transform: none !important; }
@@ -87,14 +80,29 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
 
 <script>
   import { animate } from 'motion';
-  import { navigate } from 'astro:transitions/client';
+  import { navigate, TransitionBeforePreparationEvent } from 'astro:transitions/client';
   import { faseLunare, nomeFaseLunare, longitudine, type Pianeta } from '@/lib/cielo';
   import { alterna, attiva, onCambio, tac } from '@/lib/musica';
-  import { avviaViaggio, CURVA, NAVIGA, type Scena, type Viaggio } from '@/lib/viaggio';
+  import { avviaViaggio, CHIAVI_ARRIVO, CURVA_VIAGGIO, NAVIGA, type Scena, type Viaggio } from '@/lib/viaggio';
 
   const COLORI: Record<string, string> = { 1: '#3D6BC2', 2: '#E8B33C', 3: '#D4634A', 4: '#D4634A', 5: '#E8B33C', 6: '#3D6BC2', 8: '#6D5BC9', 9: '#2F8A6B' };
   const RIPOSO = 'Benvenuto sul mio tavolo. Tocca pure, non si rompe niente.';
   const riduci = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /** La scena a cui appartiene una navigazione (`navigate(dest, { info: { scena } })`), se è di una scena. */
+  const scenaDi = (info: unknown): string | null =>
+    typeof info === 'object' && info !== null && 'scena' in info && typeof info.scena === 'string' ? info.scena : null;
+
+  // Una navigazione che non è quella di una scena (link della testata o del piè di pagina, Indietro, Invio)
+  // ferma la scena in corso e lo scorrimento, e cancella la copertura di arrivo.
+  let interrompi: (() => void) | null = null;
+  document.addEventListener('astro:before-preparation', (e) => {
+    if (e instanceof TransitionBeforePreparationEvent && scenaDi(e.info)) return;
+    interrompi?.();
+  });
+
+  /** Chi ascolta il cambio della musica: uno solo, anche tornando più volte alla home. */
+  let smetti: (() => void) | null = null;
 
   /** Oggetto → scena, forma di riferimento dentro l'oggetto, destinazione. */
   const OGGETTI: Record<string, { scena: Scena; forma: string; dest: string }> = {
@@ -130,7 +138,7 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
     const didascalia = radice.querySelector<HTMLElement>('[data-didascalia]')!;
     const pallino = radice.querySelector<HTMLElement>('[data-pallino]')!;
     const viaggio = radice.querySelector<HTMLElement>('[data-viaggio]')!;
-    const scena = radice.querySelector<SVGSVGElement>('[data-viaggio-svg]')!;
+    const disegno = radice.querySelector<SVGSVGElement>('[data-viaggio-svg]')!;
 
     // pianeti nelle posizioni di oggi
     (['mercurio', 'venere', 'terra', 'marte'] as Pianeta[]).forEach((p) => {
@@ -171,20 +179,28 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
       el.addEventListener('pointerleave', () => mostra(null));
       el.addEventListener('blur', () => mostra(null));
     });
-    onCambio(() => mostra(document.activeElement?.closest('[data-oggetto]') ? (document.activeElement as HTMLElement).dataset.oggetto ?? null : null));
+    smetti?.();
+    smetti = onCambio(() => mostra(document.activeElement?.closest('[data-oggetto]') ? (document.activeElement as HTMLElement).dataset.oggetto ?? null : null));
 
     // Scorrimento dolce fino al raccoglitore, guidato da Motion (la curva è la stessa delle scene).
+    // Da tastiera, alla fine il fuoco passa al raccoglitore.
     let scorrimento: ReturnType<typeof animate> | null = null;
-    const scorri = (dolce: boolean) => {
+    const scorri = (dolce: boolean, fuoco: boolean) => {
       const meta = document.querySelector<HTMLElement>('#collezione');
       if (!meta) return;
       const arrivo = meta.getBoundingClientRect().top + window.scrollY - 24;
+      const metti = () => {
+        if (!fuoco) return;
+        if (!meta.hasAttribute('tabindex')) meta.setAttribute('tabindex', '-1');
+        meta.focus({ preventScroll: true });
+      };
       scorrimento?.stop();
-      if (!dolce) { window.scrollTo({ top: arrivo, behavior: 'instant' }); return; }
+      if (!dolce) { window.scrollTo({ top: arrivo, behavior: 'instant' }); metti(); return; }
       scorrimento = animate(window.scrollY, arrivo, {
-        duration: 0.8,
-        ease: CURVA,
+        duration: 0.9,
+        ease: CURVA_VIAGGIO,
         onUpdate: (v) => window.scrollTo({ top: v, behavior: 'instant' }),
+        onComplete: metti,
       });
     };
 
@@ -196,7 +212,12 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
       corrente = null;
       viaggio.classList.remove('viaggio--attivo');
     };
-    const parti = async (n: string, oggetto: SVGElement) => {
+    interrompi = () => {
+      chiudi();
+      scorrimento?.stop();
+      CHIAVI_ARRIVO.forEach((k) => sessionStorage.removeItem(k));
+    };
+    const parti = async (n: string, oggetto: SVGElement, punto: { x: number; y: number } | null) => {
       const voce = OGGETTI[n];
       if (!voce) return;
       if (corrente?.naviga) return;
@@ -208,20 +229,32 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
       if (voce.scena === 'bacchette') void alterna();
       const forma = oggetto.querySelector(voce.forma) ?? oggetto;
       const ridotto = riduci();
+      // Lo scorrimento si misura prima che la scena ingrandisca il raccoglitore.
+      if (voce.dest === '#collezione') scorri(!ridotto, punto === null);
       viaggio.classList.add('viaggio--attivo');
-      const v = avviaViaggio({ scena: voce.scena, svg: scena, oggetto, forma, ridotto, musica });
+      const v = avviaViaggio({ scena: voce.scena, radice: viaggio, svg: disegno, oggetto, forma, punto, ridotto, musica });
       const naviga = NAVIGA[voce.scena];
       corrente = { ...v, naviga };
-      if (voce.dest === '#collezione') scorri(!ridotto);
       await v.linea.finished;
+      // Se nel frattempo un'altra scena o un'altra navigazione ha chiuso questa, non si fa più niente.
       if (corrente?.linea !== v.linea) return;
-      if (naviga) { await navigate(voce.dest); return; }
+      if (naviga) {
+        v.segnaArrivo();
+        await navigate(voce.dest, { info: { scena: voce.scena } });
+        return;
+      }
       chiudi();
     };
     svg.querySelectorAll<SVGElement>('[data-oggetto]').forEach((el) => {
       const n = el.dataset.oggetto ?? '';
       if (!OGGETTI[n]) return;
-      el.addEventListener('click', (e) => { e.preventDefault(); void parti(n, el); });
+      el.addEventListener('click', (e) => {
+        // Click con il tasto centrale o con un modificatore: il link si apre come sempre (nuova scheda, nuova finestra).
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        // Da tastiera (Invio) il click non ha un puntatore: `detail` è 0.
+        void parti(n, el, e.detail === 0 ? null : { x: e.clientX, y: e.clientY });
+      });
     });
   }
 
