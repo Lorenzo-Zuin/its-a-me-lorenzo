@@ -1,24 +1,131 @@
 ---
-// Saturno: intestazione della pagina «Chi sono». Entra ruotando quando si arriva dal sistema solare.
+// Saturno: intestazione della pagina «Chi sono». Gli anelli si aprono all'arrivo e seguono il puntatore;
+// Titano gira attorno al pianeta passando dietro e davanti; le tempeste scorrono con la rotazione.
 ---
-<svg class="saturno" viewBox="-110 -70 220 140" width="300" height="190" role="img" aria-label="Saturno con gli anelli">
+<svg class="saturno" data-saturno data-entra-propria viewBox="-130 -80 260 160" width="340" height="209" role="img" aria-label="Saturno con gli anelli e la luna Titano">
   <defs>
-    <radialGradient id="satG" cx="38%" cy="35%" r="70%"><stop offset="0" stop-color="#F3DFA6"/><stop offset=".6" stop-color="#D9B46A"/><stop offset="1" stop-color="#9A7A3A"/></radialGradient>
-    <linearGradient id="anelloG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C9B27A" stop-opacity=".2"/><stop offset=".5" stop-color="#E8D5A0"/><stop offset="1" stop-color="#C9B27A" stop-opacity=".2"/></linearGradient>
-    <clipPath id="satDietro"><rect x="-110" y="-70" width="220" height="70"/></clipPath>
-    <clipPath id="satDavanti"><rect x="-110" y="0" width="220" height="70"/></clipPath>
+    <radialGradient id="satG" cx="36%" cy="32%" r="75%"><stop offset="0" stop-color="#F7E6B4"/><stop offset=".55" stop-color="#D9B46A"/><stop offset="1" stop-color="#8E6E30"/></radialGradient>
+    <linearGradient id="anelloG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#C9B27A" stop-opacity=".15"/><stop offset=".5" stop-color="#EBD9A6"/><stop offset="1" stop-color="#C9B27A" stop-opacity=".15"/></linearGradient>
+    <radialGradient id="satOmbra" cx="30%" cy="30%" r="80%"><stop offset=".55" stop-color="#1A1D2B" stop-opacity="0"/><stop offset="1" stop-color="#1A1D2B" stop-opacity=".45"/></radialGradient>
+    <clipPath id="satDietro"><rect x="-130" y="-80" width="260" height="80"/></clipPath>
+    <clipPath id="satDavanti"><rect x="-130" y="0" width="260" height="80"/></clipPath>
+    <clipPath id="satDisco"><circle r="46"/></clipPath>
   </defs>
-  <g transform="rotate(-18)">
-    <g clip-path="url(#satDietro)"><ellipse rx="96" ry="26" fill="none" stroke="url(#anelloG)" stroke-width="14"/><ellipse rx="78" ry="21" fill="none" stroke="#1A1D2B" stroke-opacity=".25" stroke-width="2"/></g>
-    <circle r="46" fill="url(#satG)"/>
-    <g fill="none" stroke="#B89650" stroke-opacity=".35" stroke-width="3"><path d="M-44 -12 q44 -6 88 0"/><path d="M-46 6 q46 8 92 0"/><path d="M-40 24 q40 6 80 0"/></g>
-    <g clip-path="url(#satDavanti)"><ellipse rx="96" ry="26" fill="none" stroke="url(#anelloG)" stroke-width="14"/><ellipse rx="78" ry="21" fill="none" stroke="#1A1D2B" stroke-opacity=".25" stroke-width="2"/></g>
+  <g class="sat-stelle" fill="#B07A1A">
+    <circle cx="-112" cy="-52" r="1.4"/><circle cx="104" cy="-60" r="1.1"/><circle cx="118" cy="30" r="1.5"/><circle cx="-96" cy="56" r="1.1"/><circle cx="-64" cy="-70" r="1"/><circle cx="62" cy="66" r="1.2"/>
+  </g>
+  <g class="sat-corpo">
+    <g class="sat-asse" transform="rotate(-18)">
+      <g clip-path="url(#satDietro)">
+        <g class="sat-anelli">
+          <ellipse class="sat-anello" data-rx="96" rx="96" ry="26" fill="none" stroke="url(#anelloG)" stroke-width="13"/>
+          <ellipse class="sat-anello" data-rx="80.5" rx="80.5" ry="21.8" fill="none" stroke="#1A1D2B" stroke-opacity=".28" stroke-width="1.6"/>
+          <ellipse class="sat-anello" data-rx="70" rx="70" ry="19" fill="none" stroke="#D9C58F" stroke-opacity=".7" stroke-width="5"/>
+        </g>
+        <circle class="sat-luna sat-luna--dietro" r="4.2" fill="#C98A5B"/>
+      </g>
+      <g class="sat-pianeta">
+        <circle r="46" fill="url(#satG)"/>
+        <g clip-path="url(#satDisco)">
+          <g fill="none" stroke="#B89650" stroke-opacity=".38" stroke-width="3"><path d="M-48 -14 q48 -7 96 0"/><path d="M-48 5 q48 9 96 0"/><path d="M-48 23 q48 7 96 0"/></g>
+          <path d="M-48 -27 q48 -5 96 0" fill="none" stroke="#FBF0CF" stroke-opacity=".35" stroke-width="2"/>
+          <g class="sat-tempeste" fill="#A8843F" opacity=".55">
+            <ellipse cx="-70" cy="-6" rx="9" ry="2.6"/><ellipse cx="-20" cy="15" rx="6" ry="2"/><ellipse cx="40" cy="-19" rx="5" ry="1.6"/><ellipse cx="80" cy="14" rx="8" ry="2.2"/>
+            <ellipse cx="-162" cy="-6" rx="9" ry="2.6"/><ellipse cx="-112" cy="15" rx="6" ry="2"/><ellipse cx="-52" cy="-19" rx="5" ry="1.6"/><ellipse cx="-12" cy="14" rx="8" ry="2.2"/>
+          </g>
+          <circle r="46" fill="url(#satOmbra)"/>
+        </g>
+      </g>
+      <g clip-path="url(#satDavanti)">
+        <g class="sat-anelli">
+          <ellipse class="sat-anello" data-rx="96" rx="96" ry="26" fill="none" stroke="url(#anelloG)" stroke-width="13"/>
+          <ellipse class="sat-anello" data-rx="80.5" rx="80.5" ry="21.8" fill="none" stroke="#1A1D2B" stroke-opacity=".28" stroke-width="1.6"/>
+          <ellipse class="sat-anello" data-rx="70" rx="70" ry="19" fill="none" stroke="#D9C58F" stroke-opacity=".7" stroke-width="5"/>
+        </g>
+        <circle class="sat-luna sat-luna--davanti" r="4.2" fill="#C98A5B"/>
+      </g>
+    </g>
   </g>
 </svg>
 
 <style>
-  .saturno { filter: drop-shadow(0 24px 30px rgba(26, 29, 43, 0.25)); max-width: 100%; height: auto; }
-  :global(html[data-arrivo='cielo']) .saturno { animation: entraSaturno 1s var(--curva-arrivo) 0.15s both; }
-  @keyframes entraSaturno { from { opacity: 0; transform: scale(0.3) rotate(-30deg); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { :global(html[data-arrivo='cielo']) .saturno { animation: none; } }
+  .saturno { filter: drop-shadow(0 24px 30px rgba(26, 29, 43, 0.25)); max-width: 100%; height: auto; overflow: visible; }
 </style>
+
+<script>
+  import { gsap, riduci, puntatoreFine, allaUscita } from '@/lib/moto';
+  import { arrivoDa, ritardoArrivo } from '@/lib/scena';
+
+  function avvia() {
+    const svg = document.querySelector<SVGSVGElement>('[data-saturno]');
+    if (!svg || svg.dataset.pronto) return;
+    svg.dataset.pronto = '1';
+    const q = <T extends Element = SVGElement>(s: string) => Array.from(svg.querySelectorAll<T>(s));
+    const anelli = q<SVGEllipseElement>('.sat-anello');
+    const lune = { dietro: q('.sat-luna--dietro')[0], davanti: q('.sat-luna--davanti')[0] };
+    // apertura degli anelli: rapporto tra asse minore e asse maggiore (0 = di taglio)
+    const stato = { apertura: 0.27, angolo: 0.6 };
+    const disegna = () => {
+      anelli.forEach((a) => a.setAttribute('ry', (Number(a.dataset.rx) * stato.apertura).toFixed(2)));
+      const x = Math.cos(stato.angolo) * 112, y = Math.sin(stato.angolo) * 112 * stato.apertura;
+      const davanti = Math.sin(stato.angolo) > 0;
+      const scala = 1 + Math.sin(stato.angolo) * 0.14;
+      (['dietro', 'davanti'] as const).forEach((lato) => {
+        const l = lune[lato];
+        l.setAttribute('cx', x.toFixed(2));
+        l.setAttribute('cy', y.toFixed(2));
+        l.setAttribute('r', (4.2 * scala).toFixed(2));
+        l.setAttribute('visibility', (lato === 'davanti') === davanti ? 'visible' : 'hidden');
+      });
+    };
+    disegna();
+    if (riduci()) return;
+
+    const corpo = q('.sat-corpo')[0], asse = q('.sat-asse')[0], pianeta = q('.sat-pianeta')[0];
+    const animazioni: gsap.core.Animation[] = [];
+    const dalCielo = arrivoDa() === 'cielo';
+    // dal cielo il pianeta deve essere già lì quando il foro si apre
+    const t0 = dalCielo ? 0.12 : ritardoArrivo() + 0.1;
+
+    // ingresso: il pianeta arriva dal fondo, gli anelli partono di taglio e si aprono
+    stato.apertura = 0.015;
+    disegna();
+    const ingresso = gsap.timeline({ delay: t0 });
+    ingresso
+      .fromTo(pianeta, { scale: dalCielo ? 0.3 : 0.5, autoAlpha: 0, transformOrigin: '50% 50%' }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'arrivo' }, 0)
+      .fromTo(asse, { rotation: -70, svgOrigin: '0 0' }, { rotation: -18, duration: 1.6, ease: 'arrivo' }, 0)
+      .fromTo(q('.sat-anelli'), { scale: 0.2, autoAlpha: 0, svgOrigin: '0 0' }, { scale: 1, autoAlpha: 1, duration: 1.2, ease: 'arrivo' }, 0.1)
+      .to(stato, { apertura: 0.27, duration: 1.5, ease: 'elastic.out(1, 0.55)', onUpdate: disegna }, 0.35)
+      .fromTo(q('.sat-luna'), { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.9)
+      .fromTo(q('.sat-stelle circle'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(3)', stagger: 0.07 }, 0.7);
+    animazioni.push(ingresso);
+
+    // vita: Titano orbita, le tempeste scorrono (il disegno è doppio: il giro si chiude senza salti), il pianeta galleggia
+    animazioni.push(gsap.to(stato, { angolo: `+=${Math.PI * 2}`, duration: 11, ease: 'none', repeat: -1, onUpdate: disegna }));
+    animazioni.push(gsap.fromTo(q('.sat-tempeste'), { x: 0 }, { x: 92, duration: 9, ease: 'none', repeat: -1 }));
+    animazioni.push(gsap.to(corpo, { y: -5, duration: 3.2, ease: 'sine.inOut', repeat: -1, yoyo: true }));
+    q('.sat-stelle circle').forEach((s) => animazioni.push(gsap.to(s, { opacity: 0.25, duration: gsap.utils.random(0.9, 2), ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.6 + Math.random() * 2 })));
+
+    // il puntatore cambia l'inclinazione: su e giù apre e chiude gli anelli, destra e sinistra ruota l'asse
+    let muovi: ((e: PointerEvent) => void) | null = null;
+    if (puntatoreFine()) {
+      const apri = gsap.quickTo(stato, 'apertura', { duration: 0.9, ease: 'power3.out', onUpdate: disegna });
+      const ruota = gsap.quickTo(asse, 'rotation', { duration: 0.9, ease: 'power3.out' });
+      muovi = (e) => {
+        if (ingresso.isActive()) return;
+        const r = svg.getBoundingClientRect();
+        const nx = gsap.utils.clamp(-1, 1, (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2));
+        const ny = gsap.utils.clamp(-1, 1, (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2));
+        apri(0.27 + ny * 0.17);
+        ruota(-18 + nx * 9);
+      };
+      window.addEventListener('pointermove', muovi);
+    }
+    allaUscita(() => {
+      if (muovi) window.removeEventListener('pointermove', muovi);
+      animazioni.forEach((a) => a.kill());
+      gsap.killTweensOf([stato, asse]);
+    });
+  }
+  document.addEventListener('astro:page-load', avvia);
+</script>

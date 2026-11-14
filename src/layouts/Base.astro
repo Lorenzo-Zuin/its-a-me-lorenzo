@@ -14,7 +14,7 @@ const titoloCompleto = titolo === 'Home' ? 'Lorenzo Zuin' : `${titolo} · Lorenz
 ---
 
 <!doctype html>
-<html lang="it">
+<html lang="it" transition:animate="none">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,6 +29,18 @@ const titoloCompleto = titolo === 'Home' ? 'Lorenzo Zuin' : `${titolo} · Lorenz
       href="https://fonts.googleapis.com/css2?family=Urbanist:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
     />
     <ClientRouter />
+    <script is:inline>
+      // Prima del primo disegno: segnala che le animazioni d'ingresso ci saranno (vedi global.css).
+      (() => {
+        const segna = () => {
+          if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('moto');
+        };
+        segna();
+        document.addEventListener('astro:after-swap', segna);
+        // se lo script delle animazioni non parte, il contenuto non deve restare nascosto
+        setTimeout(() => { if (!window.motoPronto) document.documentElement.classList.remove('moto'); }, 4000);
+      })();
+    </script>
   </head>
   <body>
     <Testata />
@@ -36,20 +48,12 @@ const titoloCompleto = titolo === 'Home' ? 'Lorenzo Zuin' : `${titolo} · Lorenz
       <slot />
     </main>
     <Pie />
+    <div class="scena" id="scena" aria-hidden="true" transition:persist></div>
     <script>
-      // All'arrivo da una transizione di scena, la pagina nuova parte coperta e si svela (vedi global.css).
-      import { navigate } from 'astro:transitions/client';
-      void navigate; // mantiene attivo il router lato client anche sulle pagine senza isole
-      const applica = () => {
-        const arrivo = sessionStorage.getItem('arrivo');
-        if (arrivo) {
-          document.documentElement.dataset.arrivo = arrivo;
-          sessionStorage.removeItem('arrivo');
-          window.setTimeout(() => delete document.documentElement.dataset.arrivo, 1400);
-        }
-      };
-      applica();
-      document.addEventListener('astro:page-load', applica);
+      import { avviaScena } from '@/lib/scena';
+      import { avviaPagina } from '@/lib/pagina';
+      avviaScena();
+      avviaPagina();
     </script>
   </body>
 </html>

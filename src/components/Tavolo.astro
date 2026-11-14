@@ -3,104 +3,52 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
 ---
 
 <div class="tavolo" data-tavolo>
-  <TavoloSvg />
-  <p class="tavolo__didascalia" aria-live="polite">
-    <span class="tavolo__pallino" data-pallino aria-hidden="true"></span>
-    <span data-didascalia>Benvenuto sul mio tavolo. Tocca pure, non si rompe niente.</span>
-  </p>
-  <div class="viaggio" data-viaggio aria-hidden="true">
-    <div class="viaggio__disco" data-disco>
-      <svg class="viaggio__orbite" viewBox="-60 -60 120 120" aria-hidden="true">
-        <g fill="none" stroke="#9FC3FF" stroke-opacity=".5" stroke-width=".8"><circle r="14"/><circle r="23"/><circle r="33"/><circle r="45"/></g>
-        <circle r="6" fill="#F3CC6A"/>
-      </svg>
-    </div>
+  <div class="tavolo__scena" data-piano data-entra>
+    <TavoloSvg />
+    <span class="tavolo__luce" data-luce aria-hidden="true"></span>
   </div>
+  <p class="tavolo__didascalia" aria-live="polite" data-entra>
+    <span class="tavolo__pallino" data-pallino aria-hidden="true"></span>
+    <span class="tavolo__testo"><span data-didascalia>Benvenuto sul mio tavolo. Tocca pure, non si rompe niente.</span></span>
+  </p>
 </div>
 
 <style is:global>
-  /* Tavolo: strati, oggetti, animazioni a riposo. Globale perché lo SVG arriva da un altro file. */
-  .tavolo { position: relative; width: 100%; max-width: 560px; min-width: 0; }
-  .tavolo__svg {
-    display: block; width: 100%; height: auto; border-radius: var(--raggio);
-    filter: drop-shadow(0 30px 40px rgba(26, 29, 43, 0.3));
-    --px: 0; --py: 0;
+  /* Tavolo: solo la disposizione. Il movimento è tutto nello script qui sotto (GSAP). */
+  .tavolo { position: relative; width: 100%; max-width: 560px; min-width: 0; perspective: 1100px; }
+  .tavolo__scena {
+    position: relative; border-radius: var(--raggio); overflow: hidden; isolation: isolate;
+    box-shadow: 0 2px 4px rgba(26, 29, 43, 0.2), 0 34px 50px -18px rgba(26, 29, 43, 0.5);
+    transform-style: preserve-3d; will-change: transform;
   }
-  .strato { transition: transform 0.9s var(--curva-arrivo); will-change: transform; }
-  .strato--lontano { transform: translate(calc(var(--px) * 1.5px), calc(var(--py) * 1.5px)); }
-  .strato--medio { transform: translate(calc(var(--px) * 3px), calc(var(--py) * 3px)); }
-  .strato--vicino { transform: translate(calc(var(--px) * 6px), calc(var(--py) * 6px)); }
-  .ogg {
-    cursor: pointer; transform-box: fill-box; transform-origin: center;
-    transition: transform 0.35s var(--curva-arrivo);
+  .tavolo__svg { display: block; width: 100%; height: auto; }
+  .tavolo__luce {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0; mix-blend-mode: soft-light;
+    background: radial-gradient(circle 260px at var(--lx, 50%) var(--ly, 50%), rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 70%);
   }
-  .ogg:hover, .ogg:focus-visible { transform: translateY(-4px) scale(1.03); outline: none; }
-  .ogg:focus-visible > g { filter: drop-shadow(0 0 0 3px var(--blu)); }
+  .ogg { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+  .ogg:focus-visible { outline: 3px solid #f3cc6a; outline-offset: 3px; border-radius: 6px; }
 
   .tavolo__didascalia {
-    margin: 12px 0 0; min-height: 20px; padding: 0 8px;
+    margin: 14px 0 0; min-height: 40px; padding: 0 8px;
     font-family: var(--font-mono); font-size: 12px; line-height: 1.5; letter-spacing: 0.02em;
     color: var(--inchiostro); text-align: center;
-    display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+    display: flex; align-items: flex-start; justify-content: center; gap: 10px;
   }
-  .tavolo__pallino { width: 8px; height: 8px; border-radius: 50%; background: #c3c8d6; transition: background 0.3s; }
-
-  .vapore{animation:vapore 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:bottom}
-  .vapore:nth-child(2){animation-delay:-1.1s}.vapore:nth-child(3){animation-delay:-2.2s}
-  @keyframes vapore{0%{opacity:0;transform:translateY(6px) scaleY(.7)}30%{opacity:.7}100%{opacity:0;transform:translateY(-22px) scaleY(1.2)}}
-  .moneta{animation:gira 6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-  .moneta:nth-child(2){animation-delay:-2s}.moneta:nth-child(3){animation-delay:-4s}
-  @keyframes gira{0%,100%{transform:scaleX(1)}50%{transform:scaleX(.72)}}
-  .cartaScivola{animation:scivola 7s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-  @keyframes scivola{0%,60%,100%{transform:translate(0,0) rotate(0)}75%{transform:translate(18px,-6px) rotate(6deg)}90%{transform:translate(18px,-6px) rotate(6deg)}}
-  .stellina{animation:brilla 3.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-  .stellina:nth-child(2n){animation-delay:-1.2s}.stellina:nth-child(3n){animation-delay:-2.3s}
-  @keyframes brilla{0%,100%{opacity:.35}50%{opacity:1}}
-  .lenteBob{animation:bob 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
-  @keyframes bob{0%,100%{transform:translate(0,0)}50%{transform:translate(0,-3px)}}
-  .nuova{animation:entraCarta 8s cubic-bezier(.2,.8,.2,1) infinite;transform-box:fill-box;transform-origin:center}
-  @keyframes entraCarta{0%,55%{opacity:0;transform:translate(40px,-30px) rotate(8deg) scale(1.15)}68%,88%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}96%,100%{opacity:0;transform:translate(0,0) rotate(0) scale(1)}}
-  .tasto{animation:battuta 3.6s ease-in-out infinite;fill:#3A4060}
-  .tasto.k2{animation-delay:.25s}.tasto.k3{animation-delay:.5s}.tasto.k4{animation-delay:.75s}.tasto.k5{animation-delay:1s}.tasto.k6{animation-delay:1.25s}.tasto.k7{animation-delay:1.5s}
-  @keyframes battuta{0%,100%{fill:#3A4060}4%{fill:#C9D1E3}10%{fill:#3A4060}}
-  .bacch1,.bacch2{transform-box:fill-box;transform-origin:4% 50%;animation:suona 1.3s ease-in-out infinite}
-  .bacch2{animation-delay:-.65s}
-  @keyframes suona{0%,100%{transform:rotate(0)}18%{transform:rotate(-2.2deg)}30%{transform:rotate(.6deg)}42%{transform:rotate(0)}}
-
-  /* Transizione di scena: un disco parte dall'oggetto cliccato e copre lo schermo. */
-  .viaggio { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: none; }
-  .viaggio--attivo { display: block; }
-  .viaggio__disco { position: absolute; border-radius: 50%; transform-origin: center; will-change: transform; }
-  .viaggio__disco--caffe {
-    background: radial-gradient(circle at 42% 38%, #6b4529 0%, #4a2e1b 45%, #2c1a0e 100%);
-    box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 9px #dadfea;
-  }
-  .viaggio__disco--cielo {
-    background: radial-gradient(circle at 50% 50%, #2b54ac 0%, #1a2f66 70%, #0f1c40 100%);
-    box-shadow: inset 0 0 0 6px #f6f7fb, inset 0 0 0 8px #f3cc6a;
-  }
-  .viaggio__disco--lente {
-    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), rgba(191,217,247,.12) 50%, rgba(127,176,232,.22) 100%);
-    box-shadow: inset 0 0 0 10px #1a1d2b, inset 0 0 0 13px #f3cc6a;
-  }
-  .viaggio__orbite { position: absolute; inset: 0; width: 100%; height: 100%; display: none; }
-  .viaggio__disco--cielo .viaggio__orbite { display: block; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .strato { transition: none; transform: none !important; }
-    .vapore, .moneta, .cartaScivola, .stellina, .lenteBob, .nuova, .tasto, .bacch1, .bacch2 { animation: none; }
-  }
+  .tavolo__testo { display: block; overflow: hidden; padding: 2px 0; }
+  .tavolo__testo > span { display: block; }
+  .tavolo__pallino { flex: none; margin-top: 7px; width: 8px; height: 8px; border-radius: 50%; background: #c3c8d6; }
 </style>
 
 <script>
-  import { animate } from 'motion';
-  import { navigate } from 'astro:transitions/client';
+  import { gsap, riduci, puntatoreFine, allaUscita } from '@/lib/moto';
+  import { vai, lente, scorriA, inCorso, ritardoArrivo, type Tipo } from '@/lib/scena';
   import { faseLunare, nomeFaseLunare, longitudine, type Pianeta } from '@/lib/cielo';
   import { alterna, attiva, onCambio, tac } from '@/lib/musica';
 
   const COLORI: Record<string, string> = { 1: '#3D6BC2', 2: '#E8B33C', 3: '#D4634A', 4: '#D4634A', 5: '#E8B33C', 6: '#3D6BC2', 8: '#6D5BC9', 9: '#2F8A6B' };
   const RIPOSO = 'Benvenuto sul mio tavolo. Tocca pure, non si rompe niente.';
-  const riduci = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const GIORNO = 86_400_000;
 
   function didascalie(musicaAccesa: boolean): Record<string, string> {
     const luna = nomeFaseLunare(faseLunare());
@@ -120,102 +68,452 @@ import TavoloSvg from '@/components/TavoloSvg.astro';
     const radice = document.querySelector<HTMLElement>('[data-tavolo]');
     if (!radice || radice.dataset.pronto) return;
     radice.dataset.pronto = '1';
+    const piano = radice.querySelector<HTMLElement>('[data-piano]')!;
     const svg = radice.querySelector<SVGSVGElement>('.tavolo__svg')!;
+    const luce = radice.querySelector<HTMLElement>('[data-luce]')!;
     const didascalia = radice.querySelector<HTMLElement>('[data-didascalia]')!;
+    const riga = radice.querySelector<HTMLElement>('.tavolo__didascalia')!;
     const pallino = radice.querySelector<HTMLElement>('[data-pallino]')!;
-    const viaggio = radice.querySelector<HTMLElement>('[data-viaggio]')!;
-    const disco = radice.querySelector<HTMLElement>('[data-disco]')!;
+    const ogg = (n: number | string) => svg.querySelector<SVGAElement>(`[data-oggetto="${n}"]`)!;
+    const uno = <T extends Element = SVGElement>(sel: string, dentro: Element = svg) => dentro.querySelector<T>(sel)!;
+    const tutti = <T extends Element = SVGElement>(sel: string, dentro: Element = svg) => Array.from(dentro.querySelectorAll<T>(sel));
+    const fermo = riduci();
+    let pronto = false;
+    let reazioni: Record<string, (su: boolean) => void> = {};
+    const vapori: gsap.core.Timeline[] = [];
 
-    // pianeti nelle posizioni di oggi
-    (['mercurio', 'venere', 'terra', 'marte'] as Pianeta[]).forEach((p) => {
-      const g = svg.querySelector<SVGGElement>(`[data-pianeta="${p}"]`);
-      if (g) g.style.transform = `rotate(${-longitudine(p)}deg)`;
-    });
-
-    // parallasse leggera
-    let fermo = true;
-    const muovi = (e: PointerEvent) => {
-      if (riduci() || e.pointerType === 'touch') return;
-      const r = svg.getBoundingClientRect();
-      const nx = ((e.clientX - (r.left + r.width / 2)) / r.width) * 2;
-      const ny = ((e.clientY - (r.top + r.height / 2)) / r.height) * 2;
-      svg.style.setProperty('--px', String(Math.max(-1, Math.min(1, -nx))));
-      svg.style.setProperty('--py', String(Math.max(-1, Math.min(1, -ny))));
-      fermo = false;
+    /* ── il cielo di oggi ─────────────────────────────────────────────── */
+    const pianeti = (['mercurio', 'venere', 'terra', 'marte'] as Pianeta[]).map((p) => ({ p, g: uno<SVGGElement>(`[data-pianeta="${p}"]`) }));
+    const luna = uno<SVGGElement>('[data-luna]');
+    const tempo = { giorni: 0 };
+    const disponiCielo = () => {
+      const data = new Date(Date.now() + tempo.giorni * GIORNO);
+      pianeti.forEach(({ p, g }) => { g.style.transform = `rotate(${(-longitudine(p, data)).toFixed(2)}deg)`; });
+      // luna nuova = tra la Terra e il Sole (180° nel riferimento della Terra)
+      luna.setAttribute('transform', `translate(33 0) rotate(${(-(180 + faseLunare(data) * 360)).toFixed(1)})`);
     };
-    const ferma = () => {
-      if (fermo) return;
-      svg.style.setProperty('--px', '0');
-      svg.style.setProperty('--py', '0');
-      fermo = true;
-    };
-    radice.addEventListener('pointermove', muovi);
-    radice.addEventListener('pointerleave', ferma);
+    disponiCielo();
 
-    // etichette
-    const mostra = (n: string | null) => {
+    /* ── didascalia: il testo vecchio esce in alto, il nuovo sale dal basso ── */
+    let testoAttuale = RIPOSO;
+    let cambio: gsap.core.Timeline | null = null;
+    let attesa = 0;
+    const scrivi = (n: string | null) => {
       const t = didascalie(attiva());
-      didascalia.textContent = n && t[n] ? t[n] : RIPOSO;
-      pallino.style.background = n && COLORI[n] ? COLORI[n] : '#c3c8d6';
+      const testo = n && t[n] ? t[n] : RIPOSO;
+      const colore = n && COLORI[n] ? COLORI[n] : '#c3c8d6';
+      gsap.to(pallino, { backgroundColor: colore, scale: n ? 1.35 : 1, duration: 0.4, overwrite: true });
+      if (testo === testoAttuale) return;
+      testoAttuale = testo;
+      if (fermo) { didascalia.textContent = testo; return; }
+      cambio?.kill();
+      cambio = gsap.timeline()
+        .to(didascalia, { yPercent: -70, autoAlpha: 0, duration: 0.13, ease: 'power2.in' })
+        .add(() => { didascalia.textContent = testo; })
+        .fromTo(didascalia, { yPercent: 70, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.42 });
     };
-    svg.querySelectorAll<SVGElement>('[data-oggetto]').forEach((el) => {
-      const n = el.dataset.oggetto ?? null;
-      el.addEventListener('pointerenter', () => mostra(n));
-      el.addEventListener('focus', () => mostra(n));
-      el.addEventListener('pointerleave', () => mostra(null));
-      el.addEventListener('blur', () => mostra(null));
+    const mostra = (n: string | null) => {
+      window.clearTimeout(attesa);
+      if (n) scrivi(n); else attesa = window.setTimeout(() => scrivi(null), 90);
+    };
+
+    if (fermo) { collegaClic(); collegaEtichette(); return; }
+
+    /* ── preparazione: le ombre di monete e fiches diventano sorelle, così restano sul panno quando il pezzo si alza ── */
+    tutti('.moneta, .fiche').forEach((pezzo) => {
+      const ombra = uno('.ombra', pezzo);
+      pezzo.parentNode!.insertBefore(ombra, pezzo);
     });
-    onCambio(() => mostra(document.activeElement?.closest('[data-oggetto]') ? (document.activeElement as HTMLElement).dataset.oggetto ?? null : null));
+    const strati = { lontano: uno('.strato--lontano'), medio: uno('.strato--medio'), vicino: uno('.strato--vicino') };
+    const oggetti = tutti<SVGAElement>('.ogg');
+    gsap.set(oggetti, { transformOrigin: '50% 50%' });
+    gsap.set(tutti('.moneta, .fiche, .cartaScivola, .nuova, .sole-alone, .lenteBob'), { transformOrigin: '50% 50%' });
+    gsap.set(tutti('.cartaVentaglio'), { transformOrigin: '50% 100%' });
+    gsap.set(tutti('.bacch1, .bacch2'), { transformOrigin: '6% 50%' });
+    gsap.set(uno('.nuova'), { autoAlpha: 0 });
 
-    // bacchette: musica
-    svg.querySelector('[data-azione="musica"]')?.addEventListener('click', (e) => {
-      e.preventDefault();
-      void alterna();
+    const cicli: gsap.core.Tween[] = [];
+    const vite: gsap.core.Animation[] = [];
+    let vivo = true;
+    let inVista = true;
+    /** Ripete `fn` per sempre: `fn` restituisce i secondi fino al giro successivo. */
+    const ciclo = (fn: () => number, primo = 0) => {
+      const giro = () => {
+        if (!vivo) return;
+        const tra = inVista ? fn() : 1;
+        cicli[indice] = gsap.delayedCall(tra, giro);
+      };
+      const indice = cicli.length;
+      cicli.push(gsap.delayedCall(primo, giro));
+    };
+
+    /* ── ingresso: il tavolo viene apparecchiato, un oggetto alla volta ── */
+    const ombreDi = (el: Element) => tutti('.ombra', el);
+    const cade = (el: Element, t: number, da: gsap.TweenVars = {}) => {
+      const ombre = ombreDi(el);
+      const tl = gsap.timeline();
+      tl.fromTo(el, { scale: 1.42, y: -34, rotation: gsap.utils.random(-7, 7), ...da }, { scale: 1, y: 0, x: 0, rotation: 0, duration: 0.5, ease: 'caduta' }, 0)
+        .fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.16, ease: 'none' }, 0)
+        .fromTo(ombre, { x: 16, y: 26, opacity: 0.05 }, { x: 0, y: 0, opacity: (_i, o: Element) => Number(o.getAttribute('opacity') ?? 0.25), duration: 0.5, ease: 'caduta' }, 0)
+        // il colpo sul panno: un piccolo rimbalzo verso chi guarda
+        .to(el, { scale: 1.035, duration: 0.11, ease: 'power2.out' }, 0.5)
+        .to(el, { scale: 1, duration: 0.16, ease: 'power2.in' }, 0.61);
+      ingresso.add(tl, t);
+    };
+    const base = ritardoArrivo();
+    const ingresso = gsap.timeline({ delay: base + 0.1, onComplete: () => { pronto = true; vita(); } });
+    ingresso
+      .fromTo(piano, { autoAlpha: 0, y: 50, scale: 0.9, rotationX: 16, transformOrigin: '50% 100%' }, { autoAlpha: 1, y: 0, scale: 1, rotationX: 0, duration: 1.1 }, 0)
+      .fromTo(riga, { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.7 }, 1.5);
+    gsap.set(oggetti, { autoAlpha: 0 });
+    cade(ogg(1), 0.3, { rotation: -5 });
+    ingresso.to(piano, { y: 3, duration: 0.07, ease: 'power2.out' }, 0.8).to(piano, { y: 0, duration: 0.5, ease: 'elastic.out(1, 0.35)' }, 0.87);
+    cade(ogg(2), 0.5);
+    cade(ogg(3), 0.62);
+    // la tastiera scivola dentro dal bordo basso
+    ingresso.fromTo(ogg(9), { autoAlpha: 0, y: 110, rotation: 3 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.9 }, 0.55);
+    cade(ogg(6), 0.76);
+    // le bacchette rotolano dentro dall'alto
+    ingresso
+      .fromTo(ogg(4), { autoAlpha: 0, y: -90, rotation: -24 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.75, ease: 'back.out(1.5)' }, 0.86)
+      .fromTo(tutti('.bacch1, .bacch2'), { rotation: (i: number) => (i ? 7 : -7) }, { rotation: 0, duration: 0.9, ease: 'elastic.out(1, 0.3)' }, 1.1);
+    // monete e fiches: lanciate una per una
+    gsap.set(ogg(5), { autoAlpha: 1 });
+    tutti('.moneta, .fiche').forEach((pezzo, i) => {
+      const gruppo = pezzo.parentElement!;
+      const ombra = uno('.ombra', gruppo);
+      const t = 0.95 + i * 0.07;
+      ingresso
+        .fromTo(pezzo, { scale: 1.7, x: 46, y: -40, rotation: 200 }, { scale: 1, x: 0, y: 0, rotation: 0, duration: 0.5, ease: 'power2.in' }, t)
+        .fromTo(pezzo, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12, ease: 'none' }, t)
+        .fromTo(ombra, { opacity: 0, x: 12, y: 18 }, { opacity: 0.28, x: 0, y: 0, duration: 0.5, ease: 'power2.in' }, t)
+        .to(pezzo, { scale: 1.08, duration: 0.09, ease: 'power2.out' }, t + 0.5)
+        .to(pezzo, { scale: 1, duration: 0.14, ease: 'power2.in' }, t + 0.59);
     });
+    // la lente arriva per ultima, girando
+    ingresso
+      .fromTo(ogg(8), { autoAlpha: 0, x: 90, y: 60, rotation: 50, scale: 1.3 }, { autoAlpha: 1, x: 0, y: 0, rotation: 0, scale: 1, duration: 1.0 }, 1.2)
+      .fromTo(ombreDi(ogg(8)), { x: 14, y: 22, opacity: 0.04 }, { x: 0, y: 0, opacity: 0.22, duration: 1.0 }, 1.2);
 
-    // transizioni di scena
-    const parti = async (tipo: 'caffe' | 'cielo' | 'lente', origine: Element, destinazione: string) => {
-      tac();
-      if (riduci()) { if (tipo === 'lente') scorri(); else await navigate(destinazione); return; }
-      const r = origine.getBoundingClientRect();
-      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-      const raggio = Math.max(r.width, r.height) / 2;
-      const vw = window.innerWidth, vh = window.innerHeight;
-      const lontano = Math.max(Math.hypot(cx, cy), Math.hypot(vw - cx, cy), Math.hypot(cx, vh - cy), Math.hypot(vw - cx, vh - cy));
-      const scala = (lontano * 1.08) / raggio;
-      disco.className = `viaggio__disco viaggio__disco--${tipo}`;
-      Object.assign(disco.style, { left: `${cx - raggio}px`, top: `${cy - raggio}px`, width: `${raggio * 2}px`, height: `${raggio * 2}px`, transform: 'scale(1)', opacity: '1' });
-      viaggio.classList.add('viaggio--attivo');
-      const orbite = disco.querySelector<SVGElement>('.viaggio__orbite');
-      if (orbite) orbite.style.transform = 'rotate(0deg) scale(1)';
-      const curva = [0.16, 1, 0.3, 1] as const;
-      if (tipo === 'lente') {
-        animate(disco, { transform: ['scale(1)', `scale(${(scala * 0.9).toFixed(3)})`], opacity: [1, 0] }, { duration: 0.8, ease: curva });
-        window.setTimeout(scorri, 150);
-        window.setTimeout(() => viaggio.classList.remove('viaggio--attivo'), 850);
-        return;
-      }
-      const anim = animate(disco, { transform: ['scale(1)', `scale(${scala.toFixed(3)})`] }, { duration: 0.85, ease: curva });
-      if (orbite) animate(orbite, { transform: ['rotate(0deg) scale(1)', 'rotate(180deg) scale(0.35)'], opacity: [1, 0] }, { duration: 0.85, ease: curva });
-      sessionStorage.setItem('arrivo', tipo);
-      await anim.finished;
-      await navigate(destinazione);
-    };
-    const scorri = () => document.querySelector('#collezione')?.scrollIntoView({ behavior: riduci() ? 'auto' : 'smooth', block: 'start' });
+    /* ── vita a riposo ─────────────────────────────────────────────────── */
+    let cartaIdle: gsap.core.Timeline;
+    let orologio: gsap.core.Tween | null = null;
+    const zoom = { z: 1.7 };
 
-    const collega = (n: string, tipo: 'caffe' | 'cielo' | 'lente', dest: string) => {
-      const el = svg.querySelector<SVGElement>(`[data-oggetto="${n}"]`);
-      el?.addEventListener('click', (e) => { e.preventDefault(); void parti(tipo, el, dest); });
+    function vita() {
+      // vapore: ogni filo si disegna dal basso, sale, ondeggia e si dissolve
+      tutti('.vapore').forEach((v, i) => {
+        const tl = gsap.timeline({ repeat: -1, delay: i * 0.9, repeatDelay: 0.3 });
+        tl.fromTo(v, { drawSVG: '0% 0%', opacity: 0, x: 0, y: 4 }, { drawSVG: '0% 65%', opacity: 0.85, y: 0, duration: 1.2, ease: 'power1.in' })
+          .to(v, { drawSVG: '55% 100%', x: i % 2 ? -3.5 : 3.5, y: -6, duration: 1.0, ease: 'none' })
+          .to(v, { drawSVG: '100% 100%', opacity: 0, x: 0, y: -12, duration: 0.8, ease: 'power1.out' });
+        vite.push(tl);
+        vapori.push(tl);
+      });
+      // la superficie del caffè: un cerchio che si allarga ogni tanto
+      ciclo(() => { ondaCaffe(); return gsap.utils.random(3.5, 6); }, 2);
+
+      // stelle e sole
+      tutti('.stellina').forEach((s) => {
+        vite.push(gsap.fromTo(s, { opacity: 0.25 }, { opacity: 1, duration: gsap.utils.random(0.9, 2.2), ease: 'sine.inOut', repeat: -1, yoyo: true, delay: gsap.utils.random(0, 2) }));
+      });
+      vite.push(gsap.fromTo(uno('.sole-alone'), { scale: 1, opacity: 0.25 }, { scale: 1.45, opacity: 0.08, duration: 2.2, ease: 'sine.inOut', repeat: -1, yoyo: true }));
+      const cadente = uno('.cadente');
+      ciclo(() => {
+        const y0 = gsap.utils.random(-52, -20);
+        gsap.timeline()
+          .fromTo(cadente, { x: -52, y: y0, opacity: 0 }, { x: -8, y: y0 + 23, opacity: 1, duration: 0.3, ease: 'power1.in' })
+          .to(cadente, { x: 40, y: y0 + 49, opacity: 0, duration: 0.4, ease: 'power1.out' });
+        return gsap.utils.random(5, 10);
+      }, 3);
+
+      // monete: a turno una salta, gira su se stessa e ricade
+      const monete = tutti('.moneta');
+      let turno = 0;
+      ciclo(() => { lancia(monete[turno++ % monete.length]); return gsap.utils.random(2.6, 4.2); }, 1.4);
+
+      // il mazzo: l'asso scivola fuori, si gira, torna al suo posto
+      const asso = uno('.cartaScivola'), fronte = uno('.cartaFronte'), retro = uno('.cartaRetro'), ombraAsso = uno('.ombra-carta');
+      cartaIdle = gsap.timeline({ repeat: -1, repeatDelay: 4.5, delay: 2.5 });
+      cartaIdle
+        .to(asso, { x: 22, y: -9, rotation: 9, duration: 0.6, ease: 'power3.out' })
+        .to(ombraAsso, { opacity: 0.22, duration: 0.6 }, '<')
+        .to(asso, { scaleX: 0, duration: 0.16, ease: 'power1.in' }, '+=0.25')
+        .set(fronte, { visibility: 'hidden' }).set(retro, { visibility: 'visible' })
+        .to(asso, { scaleX: 1, duration: 0.2, ease: 'power1.out' })
+        .to(asso, { scaleX: 0, duration: 0.16, ease: 'power1.in' }, '+=0.7')
+        .set(retro, { visibility: 'hidden' }).set(fronte, { visibility: 'visible' })
+        .to(asso, { scaleX: 1, duration: 0.2, ease: 'power1.out' })
+        .to(asso, { x: 0, y: 0, rotation: 0, duration: 0.55, ease: 'power3.inOut' }, '+=0.2')
+        .to(ombraAsso, { opacity: 0, duration: 0.55 }, '<');
+      vite.push(cartaIdle);
+
+      // la carta nuova: arriva da fuori, entra nella tasca, resta, riparte
+      const nuova = uno('.nuova');
+      const tlNuova = gsap.timeline({ repeat: -1, repeatDelay: 2.2, delay: 1 });
+      tlNuova
+        .fromTo(nuova, { autoAlpha: 0, x: 70, y: -92, rotation: 24, scale: 1.55 }, { autoAlpha: 1, x: 6, y: -8, rotation: 5, scale: 1.2, duration: 0.7, ease: 'power2.out' })
+        .to(nuova, { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.45, ease: 'back.out(1.6)' })
+        .to(nuova, { y: -3, duration: 0.25, ease: 'power2.out' }, '+=4.6')
+        .to(nuova, { autoAlpha: 0, x: 26, y: -64, rotation: 14, scale: 1.3, duration: 0.55, ease: 'power2.in' });
+      vite.push(tlNuova);
+
+      // la lente galleggia, e ciò che ingrandisce cambia davvero con la sua posizione
+      const bob = uno('.lenteBob');
+      vite.push(gsap.to(bob, { x: 9, duration: 4.4, ease: 'sine.inOut', repeat: -1, yoyo: true }));
+      vite.push(gsap.fromTo(bob, { y: -6 }, { y: 7, duration: 3.1, ease: 'sine.inOut', repeat: -1, yoyo: true }));
+      vite.push(gsap.to(uno('.lente-riflesso'), { rotation: 14, svgOrigin: '0 0', duration: 4.4, ease: 'sine.inOut', repeat: -1, yoyo: true }));
+      gsap.ticker.add(aggiornaLente);
+
+      // la tastiera scrive: raffiche di tasti, poi Invio
+      const tastiTutti = tutti('.tasti rect');
+      const invio = uno('.tasto-invio');
+      ciclo(() => {
+        const n = gsap.utils.random(4, 9, 1);
+        let t = 0;
+        for (let i = 0; i < n; i++) {
+          gsap.delayedCall(t, premi, [gsap.utils.random(tastiTutti)]);
+          t += gsap.utils.random(0.07, 0.16);
+        }
+        gsap.delayedCall(t + 0.12, () => {
+          gsap.timeline().to(invio, { fill: '#F2917A', y: 1.4, duration: 0.06 }).to(invio, { fill: '#D4634A', y: 0, duration: 0.35 });
+        });
+        return t + gsap.utils.random(1.2, 2.6);
+      }, 0.6);
+
+      // le bacchette suonano solo a musica accesa
+      if (attiva()) suona(true);
+    }
+
+    const ondaCaffe = () => {
+      tutti('.caffe-onde circle').forEach((c, i) => {
+        gsap.fromTo(c, { attr: { r: 3 }, opacity: 0.55 }, { attr: { r: 23 }, opacity: 0, duration: 1.5, delay: i * 0.4, ease: 'power1.out' });
+      });
     };
-    collega('3', 'caffe', '/contatti');
-    collega('2', 'cielo', '/chi-sono');
-    collega('8', 'lente', '#collezione');
-    svg.querySelector('[data-oggetto="1"]')?.addEventListener('click', (e) => { e.preventDefault(); tac(); scorri(); });
+
+    const lancia = (m: SVGElement, alto = 13) => {
+      const ombra = uno('.ombra', m.parentElement!);
+      const giro = { a: 0 };
+      gsap.timeline()
+        .to(m, { y: -alto, scale: 1.22, duration: 0.3, ease: 'power2.out' })
+        .to(m, { y: 0, scale: 1, duration: 0.28, ease: 'power2.in' })
+        .to(m, { y: -2.5, duration: 0.08, ease: 'power2.out' })
+        .to(m, { y: 0, duration: 0.1, ease: 'power2.in' })
+        .to(giro, { a: Math.PI * 3, duration: 0.58, ease: 'none', onUpdate: () => gsap.set(m, { scaleY: Math.max(0.08, Math.abs(Math.cos(giro.a))) }) }, 0)
+        .set(m, { scaleY: 1 }, 0.58)
+        .to(ombra, { x: 5, y: 9, opacity: 0.1, scale: 0.85, transformOrigin: '50% 50%', duration: 0.3, ease: 'power2.out' }, 0)
+        .to(ombra, { x: 0, y: 0, opacity: 0.28, scale: 1, duration: 0.28, ease: 'power2.in' }, 0.3);
+    };
+
+    const premi = (k: SVGElement) => {
+      gsap.timeline().to(k, { fill: '#C9D1E3', y: 1.2, duration: 0.05 }).to(k, { fill: '#3A4060', y: 0, duration: 0.25 });
+    };
+
+    // lente: il contenuto ingrandito segue lo spostamento del vetro (rotazione del manico: 32°)
+    const dentro = uno('[data-lente-dentro]');
+    const bobLente = uno('.lenteBob');
+    const lenteX = Number(dentro.dataset.cx), lenteY = Number(dentro.dataset.cy);
+    const cos = Math.cos((32 * Math.PI) / 180), sin = Math.sin((32 * Math.PI) / 180);
+    function aggiornaLente() {
+      const x = Number(gsap.getProperty(bobLente, 'x')), y = Number(gsap.getProperty(bobLente, 'y'));
+      const dx = x * cos - y * sin, dy = x * sin + y * cos;
+      dentro.setAttribute('transform', `rotate(-32) scale(${zoom.z.toFixed(3)}) translate(${(-lenteX - dx).toFixed(2)} ${(-lenteY - dy).toFixed(2)})`);
+    }
+
+    // bacchette: colpi alternati, la seconda sul levare
+    let ritmo: gsap.core.Timeline | null = null;
+    const b1 = uno('.bacch1'), b2 = uno('.bacch2');
+    const colpo = (tl: gsap.core.Timeline, b: SVGElement, t: number, forza = 1) => {
+      tl.to(b, { rotation: -5.5 * forza, duration: 0.1, ease: 'power2.out' }, t)
+        .to(b, { rotation: 1.2, duration: 0.06, ease: 'power3.in' }, t + 0.1)
+        .to(b, { rotation: 0, duration: 0.22, ease: 'elastic.out(1, 0.4)' }, t + 0.16);
+    };
+    function suona(accesa: boolean) {
+      ritmo?.kill();
+      ritmo = null;
+      if (!accesa) { gsap.to([b1, b2], { rotation: 0, duration: 0.4 }); return; }
+      ritmo = gsap.timeline({ repeat: -1 });
+      // un giro di 2 secondi: uno, e-due, tre, e-quattro
+      colpo(ritmo, b1, 0); colpo(ritmo, b2, 0.5, 0.7); colpo(ritmo, b2, 0.75, 0.7); colpo(ritmo, b1, 1); colpo(ritmo, b2, 1.5, 0.7);
+      ritmo.to({}, { duration: 0.1 }, 1.9);
+    }
+    const rullata = () => {
+      if (ritmo) return;
+      const tl = gsap.timeline();
+      [0, 0.09, 0.18, 0.27, 0.36].forEach((t, i) => colpo(tl, i % 2 ? b2 : b1, t, 0.8));
+    };
+
+    /* ── reazioni al puntatore ─────────────────────────────────────────── */
+    const solleva = (a: SVGAElement, su: boolean, quota = 5) => {
+      gsap.to(a, { y: su ? -quota : 0, scale: su ? 1.045 : 1, duration: su ? 0.5 : 0.7, ease: su ? 'back.out(2.4)' : 'elastic.out(1, 0.5)', overwrite: 'auto' });
+      const ombre = tutti(':scope > g > .ombra, :scope > g > g > .ombra', a);
+      gsap.to(ombre, { x: su ? 4 : 0, y: su ? 9 : 0, duration: 0.5, overwrite: 'auto' });
+    };
+    reazioni = {
+      1: (su) => {
+        solleva(ogg(1), su, 4);
+        if (su) gsap.fromTo(tutti('#raccoglitoreGruppo > rect[fill^="#"][width="32"]'), { y: 0 }, { y: -3, duration: 0.16, ease: 'power2.out', stagger: { each: 0.035, yoyo: true, repeat: 1 } });
+      },
+      2: (su) => {
+        solleva(ogg(2), su);
+        orologio?.kill();
+        // il tempo accelera: fino a due anni in avanti. Uscendo, torna a oggi.
+        orologio = su
+          ? gsap.to(tempo, { giorni: 730, duration: 16, ease: 'power1.out', onUpdate: disponiCielo })
+          : gsap.to(tempo, { giorni: 0, duration: 1.3, ease: 'power3.inOut', onUpdate: disponiCielo });
+      },
+      3: (su) => {
+        solleva(ogg(3), su);
+        if (su) ondaCaffe();
+        vapori.forEach((v) => gsap.to(v, { timeScale: su ? 2.4 : 1, duration: 0.4 }));
+      },
+      4: (su) => { solleva(ogg(4), su, 4); if (su) rullata(); },
+      5: (su) => {
+        if (!su) return;
+        tutti('.fiche').forEach((f, i) => {
+          const ombra = uno('.ombra', f.parentElement!);
+          gsap.timeline({ delay: i * 0.07 })
+            .to(f, { y: -8, rotation: 50, duration: 0.2, ease: 'power2.out' })
+            .to(f, { y: 0, rotation: 90, duration: 0.2, ease: 'power2.in' })
+            .set(f, { rotation: 0 })
+            .to(ombra, { x: 3, y: 6, opacity: 0.14, duration: 0.2, ease: 'power2.out' }, 0)
+            .to(ombra, { x: 0, y: 0, opacity: 0.28, duration: 0.2, ease: 'power2.in' }, 0.2);
+        });
+        lancia(uno('.moneta'), 18);
+      },
+      6: (su) => {
+        solleva(ogg(6), su);
+        const [k, sette] = tutti('.cartaVentaglio');
+        const asso = uno('.cartaScivola');
+        if (su) {
+          cartaIdle?.pause();
+          gsap.set(uno('.cartaFronte'), { visibility: 'visible' });
+          gsap.set(uno('.cartaRetro'), { visibility: 'hidden' });
+          gsap.to(asso, { x: 0, y: 0, scaleX: 1, rotation: 20, transformOrigin: '50% 100%', duration: 0.5, ease: 'back.out(1.8)', overwrite: true });
+          gsap.to(sette, { rotation: 0, y: -4, duration: 0.5, ease: 'back.out(1.8)', overwrite: true });
+          gsap.to(k, { rotation: -20, duration: 0.5, ease: 'back.out(1.8)', overwrite: true });
+        } else {
+          gsap.to([k, sette], { rotation: 0, y: 0, duration: 0.45, overwrite: true });
+          gsap.to(asso, { rotation: 0, duration: 0.45, overwrite: true, onComplete: () => { gsap.set(asso, { transformOrigin: '50% 50%' }); cartaIdle?.restart(true); } });
+        }
+      },
+      8: (su) => {
+        solleva(ogg(8), su, 6);
+        gsap.to(zoom, { z: su ? 2.15 : 1.7, duration: 0.6, ease: su ? 'back.out(1.6)' : 'arrivo', overwrite: true });
+      },
+      9: (su) => {
+        gsap.to(ogg(9), { y: su ? -4 : 0, duration: 0.5, overwrite: 'auto' });
+        if (su) tutti('.tasti rect').forEach((k) => gsap.delayedCall((Number(k.getAttribute('x')) / 300) * 0.35 + (Number(k.getAttribute('y')) / 90) * 0.1, premi, [k]));
+      },
+    };
+
+    function collegaEtichette() {
+      tutti<SVGAElement>('[data-oggetto]').forEach((el) => {
+        const n = el.dataset.oggetto!;
+        const entra = () => { mostra(n); if (pronto && !inCorso()) reazioni[n]?.(true); };
+        const esce = () => { mostra(null); if (pronto) reazioni[n]?.(false); };
+        el.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') entra(); });
+        el.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') esce(); });
+        el.addEventListener('focus', entra);
+        el.addEventListener('blur', esce);
+      });
+      const via = onCambio((accesa) => {
+        if (!fermo && pronto) {
+          // due colpi di bacchetta l'una contro l'altra, poi il ritmo
+          gsap.timeline({ onComplete: () => suona(accesa) })
+            .to(uno('.bacch1'), { rotation: 3.5, duration: 0.07, yoyo: true, repeat: 3, ease: 'power2.inOut' }, 0)
+            .to(uno('.bacch2'), { rotation: -3.5, duration: 0.07, yoyo: true, repeat: 3, ease: 'power2.inOut' }, 0);
+        }
+        const fuoco = document.activeElement?.closest?.('[data-oggetto]') as HTMLElement | null;
+        const sopra = svg.querySelector<SVGAElement>('[data-oggetto]:hover');
+        const n = (sopra ?? fuoco)?.dataset.oggetto;
+        if (n) { testoAttuale = ''; scrivi(n); }
+      });
+      allaUscita(via);
+    }
+
+    /* ── clic: ogni oggetto ha la sua scena ────────────────────────────── */
+    function collegaClic() {
+      const collezione = () => document.querySelector('#collezione');
+      const viaggi: Record<string, { tipo: Tipo; href: string; origine: () => Element | null }> = {
+        2: { tipo: 'cielo', href: '/chi-sono', origine: () => ogg(2).querySelector('circle[r="56"]') },
+        3: { tipo: 'caffe', href: '/contatti', origine: () => ogg(3).querySelector('circle[r="25"]') },
+        5: { tipo: 'moneta', href: '/chi-sono#collezioni', origine: () => ogg(5).querySelector('.moneta circle[r="14"]') },
+        6: { tipo: 'carte', href: '/chi-sono#collezioni', origine: () => ogg(6).querySelector('.cartaScivola') },
+        9: { tipo: 'tasti', href: '/esperimenti', origine: () => ogg(9).querySelector('.tasto-invio') },
+      };
+      tutti<SVGAElement>('[data-oggetto]').forEach((el) => {
+        const n = el.dataset.oggetto!;
+        el.addEventListener('pointerdown', () => { if (!fermo) gsap.to(el, { scale: 0.96, duration: 0.1, ease: 'power2.out', overwrite: 'auto' }); });
+        el.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (inCorso()) return;
+          tac();
+          if (n === '4') { void alterna(); return; }
+          if (n === '1') { const c = collezione(); if (c) scorriA(c); return; }
+          if (n === '8') {
+            const c = collezione();
+            void lente(el.querySelector('circle[r="42"]'), () => {
+              if (c) window.scrollTo(0, c.getBoundingClientRect().top + window.scrollY - 12);
+              window.dispatchEvent(new CustomEvent('raccoglitore:distribuisci'));
+            });
+            return;
+          }
+          const v = viaggi[n];
+          if (v) void vai(v.tipo, v.href, v.origine());
+        });
+      });
+    }
+
+    /* ── puntatore sul tavolo: il piano si inclina, gli strati scorrono, la luce segue ── */
+    if (puntatoreFine()) {
+      const rx = gsap.quickTo(piano, 'rotationX', { duration: 0.9, ease: 'power3.out' });
+      const ry = gsap.quickTo(piano, 'rotationY', { duration: 0.9, ease: 'power3.out' });
+      const scorri = (Object.entries({ lontano: 1.5, medio: 3.5, vicino: 7 }) as ['lontano' | 'medio' | 'vicino', number][]).map(([nome, forza]) => ({
+        x: gsap.quickTo(strati[nome], 'x', { duration: 0.9, ease: 'power3.out' }),
+        y: gsap.quickTo(strati[nome], 'y', { duration: 0.9, ease: 'power3.out' }),
+        forza,
+      }));
+      radice.addEventListener('pointermove', (e) => {
+        if (!pronto) return;
+        const r = piano.getBoundingClientRect();
+        const nx = gsap.utils.clamp(-1, 1, ((e.clientX - (r.left + r.width / 2)) / r.width) * 2);
+        const ny = gsap.utils.clamp(-1, 1, ((e.clientY - (r.top + r.height / 2)) / r.height) * 2);
+        rx(-ny * 5); ry(nx * 6);
+        scorri.forEach((s) => { s.x(-nx * s.forza); s.y(-ny * s.forza); });
+        luce.style.setProperty('--lx', `${((nx + 1) * 50).toFixed(1)}%`);
+        luce.style.setProperty('--ly', `${((ny + 1) * 50).toFixed(1)}%`);
+        gsap.to(luce, { opacity: 1, duration: 0.5, overwrite: 'auto' });
+      });
+      radice.addEventListener('pointerleave', () => {
+        rx(0); ry(0);
+        scorri.forEach((s) => { s.x(0); s.y(0); });
+        gsap.to(luce, { opacity: 0, duration: 0.8, overwrite: 'auto' });
+      });
+    }
+
+    collegaEtichette();
+    collegaClic();
+
+    // fuori vista le animazioni a riposo si fermano
+    const osservatore = new IntersectionObserver(([voce]) => {
+      inVista = voce.isIntersecting;
+      vite.forEach((v) => (inVista ? v.resume() : v.pause()));
+      if (ritmo) { if (inVista) ritmo.resume(); else ritmo.pause(); }
+    });
+    osservatore.observe(piano);
+
+    allaUscita(() => {
+      vivo = false;
+      osservatore.disconnect();
+      window.clearTimeout(attesa);
+      gsap.ticker.remove(aggiornaLente);
+      cicli.forEach((c) => c.kill());
+      ingresso.kill(); cambio?.kill(); ritmo?.kill(); orologio?.kill();
+      vite.forEach((v) => v.kill());
+      gsap.killTweensOf([piano, luce, pallino, didascalia, ...svg.querySelectorAll('*')]);
+    });
   }
 
-  avvia();
   document.addEventListener('astro:page-load', avvia);
-  document.addEventListener('astro:after-swap', () => {
-    document.querySelector('[data-viaggio]')?.classList.remove('viaggio--attivo');
-  });
 </script>
