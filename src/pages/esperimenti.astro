@@ -10,13 +10,13 @@ const esperimenti = [
 
 <Base titolo="Esperimenti" descrizione="Prove, prototipi e giocattoli di Lorenzo Zuin.">
   <section class="pagina contenitore">
-    <div class="pagina__testa">
+    <div class="pagina__testa" data-entra-figli="testa">
       <a class="bottone bottone--chiaro torna" href="/">← Torna al tavolo</a>
       <p class="etichetta-mono">Esperimenti</p>
       <h1 class="titolo">Cose che provo, prima che diventino progetti.</h1>
       <p class="intro">[Due righe: qui finiscono le prove, i prototipi e i giocattoli. Alcuni crescono, altri restano qui.]</p>
     </div>
-    <div class="griglia-schede sezioni">
+    <div class="griglia-schede sezioni" data-entra-figli>
       {esperimenti.map((e) => (
         <article class="scheda">
           <p class="etichetta-mono" style={`color:${e.colore}`}>Prototipo</p>

@@ -9,15 +9,22 @@ const canali = [
 ---
 
 <Base titolo="Contatti" descrizione="Scrivi a Lorenzo Zuin: email, GitHub, LinkedIn.">
-  <div class="copertura copertura--caffe" aria-hidden="true"></div>
   <section class="pagina contenitore">
-    <div class="pagina__testa">
+    <svg class="macchia" data-macchia viewBox="-110 -110 220 220" aria-hidden="true">
+      <g fill="none" stroke="#b07a4a" stroke-linecap="round">
+        <path d="M-78 -8 C -80 -56 -40 -86 6 -84 C 54 -82 86 -44 82 4 C 78 52 40 84 -8 80 C -52 76 -76 44 -78 -8" stroke-width="7" opacity=".34"/>
+        <path d="M-70 -22 C -62 -58 -30 -76 4 -75 C 46 -74 74 -40 72 2" stroke-width="2.5" opacity=".5"/>
+        <path d="M68 22 C 58 56 26 74 -10 70 C -40 66 -62 44 -68 14" stroke-width="1.6" opacity=".4"/>
+      </g>
+      <g fill="#b07a4a" opacity=".4"><circle class="goccia" cx="96" cy="-34" r="4"/><circle class="goccia" cx="88" cy="58" r="2.4"/><circle class="goccia" cx="-98" cy="40" r="3"/></g>
+    </svg>
+    <div class="pagina__testa" data-entra-figli="testa">
       <a class="bottone bottone--chiaro torna" href="/">← Torna al tavolo</a>
       <p class="etichetta-mono">Contatti</p>
       <h1 class="titolo">Prendiamo un caffè?</h1>
       <p class="intro">Per un progetto, una domanda o una chiacchiera. Rispondo volentieri.</p>
     </div>
-    <ul class="canali">
+    <ul class="canali" data-entra-figli>
       {canali.map((c) => (
         <li>
           <a class="canale" href={c.href}>
@@ -31,10 +38,33 @@ const canali = [
 </Base>
 
 <style>
-  .copertura--caffe { background: radial-gradient(circle at 42% 38%, #6b4529 0%, #4a2e1b 45%, #2c1a0e 100%); }
+  .pagina { position: relative; }
+  .macchia { position: absolute; right: max(var(--gutter), 6%); top: 40px; width: min(300px, 38vw); height: auto; rotate: -12deg; pointer-events: none; z-index: -1; }
+  @media (max-width: 700px) { .macchia { top: 8px; right: -40px; opacity: .7; } }
+  .canale { position: relative; }
+  .canale::after { content: '→'; position: absolute; right: 20px; opacity: 0; translate: -10px 0; transition: translate .4s var(--curva-arrivo), opacity .3s; color: var(--corallo); }
+  .canale .etichetta-mono { transition: translate .4s var(--curva-arrivo); }
+  .canale:hover::after { opacity: 1; translate: 0 0; }
+  .canale:hover .etichetta-mono { translate: -28px 0; }
   .torna { align-self: flex-start; font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; font-weight: 500; padding: 10px 16px; }
   .canali { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-width: 560px; }
-  .canale { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 16px; background: var(--carta); box-shadow: var(--ombra-morbida); text-decoration: none; color: var(--inchiostro); font-weight: 700; transition: transform .2s var(--curva-arrivo); }
-  .canale:hover { transform: translateY(-2px); color: var(--inchiostro); }
+  .canale { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 16px; background: var(--carta); box-shadow: var(--ombra-morbida); text-decoration: none; color: var(--inchiostro); font-weight: 700; transition: translate .4s var(--curva-arrivo), box-shadow .4s; }
+  .canale:hover { translate: 0 -3px; color: var(--inchiostro); box-shadow: 0 1px 2px rgba(26, 29, 43, 0.06), 0 22px 34px -18px rgba(74, 46, 27, 0.5); }
   .canale .etichetta-mono { text-transform: none; }
 </style>
+
+<script>
+  import { gsap, riduci, inPagina } from '@/lib/moto';
+  import { ritardoArrivo } from '@/lib/scena';
+
+  // La tazza ha lasciato il segno: l'alone si disegna, le gocce cadono dopo.
+  document.addEventListener('astro:page-load', () => {
+    const macchia = document.querySelector('[data-macchia]');
+    if (!macchia || riduci()) return;
+    inPagina(() => {
+      const t = ritardoArrivo() + 0.5;
+      gsap.fromTo(macchia.querySelectorAll('path'), { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 1.5, ease: 'power2.inOut', stagger: 0.18, delay: t });
+      gsap.fromTo(macchia.querySelectorAll('.goccia'), { scale: 0, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.5, ease: 'back.out(3)', stagger: 0.12, delay: t + 1.1 });
+    });
+  });
+</script>

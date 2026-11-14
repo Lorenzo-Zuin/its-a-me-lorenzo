@@ -31,7 +31,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -85,16 +85,17 @@ button { font: inherit; }
   font-weight: 700;
   font-size: 15px;
   text-decoration: none;
-  transition: transform 0.2s var(--curva-arrivo), background 0.2s;
+  transition: background 0.25s, color 0.25s, box-shadow 0.3s;
+  will-change: transform;
 }
-.bottone:hover { transform: translateY(-2px); }
 .bottone--pieno { background: var(--inchiostro); color: #fff; box-shadow: 0 10px 24px -10px rgba(26, 29, 43, 0.7); }
 .bottone--pieno:hover { background: var(--blu); color: #fff; }
 .bottone--chiaro { background: var(--carta); color: var(--inchiostro); box-shadow: var(--ombra-morbida); }
 .bottone--chiaro:hover { color: var(--inchiostro); }
 
 .pagina {
-  padding: 56px 0 120px;
+  padding-top: 56px;
+  padding-bottom: 120px;
 }
 .pagina__testa {
   display: flex;
@@ -111,6 +112,9 @@ button { font: inherit; }
   padding: 20px;
   box-shadow: var(--ombra-morbida);
 }
+.scheda { transition: translate 0.45s var(--curva-arrivo), box-shadow 0.45s; }
+.scheda:hover { translate: 0 -5px; box-shadow: 0 1px 2px rgba(26, 29, 43, 0.06), 0 26px 40px -20px rgba(26, 29, 43, 0.4); }
+.scheda[id] { scroll-margin-top: 80vh; }
 .scheda p { margin: 0; }
 .scheda .etichetta-mono { font-size: 11px; margin-bottom: 6px; }
 .scheda .segnaposto { color: var(--inchiostro-2); font-size: 14px; margin-top: 6px; }
@@ -121,37 +125,56 @@ button { font: inherit; }
   gap: 14px;
 }
 
-/* Copertura all'arrivo da una transizione di scena (vedi Tavolo.astro). */
-.copertura {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  pointer-events: none;
-  opacity: 0;
-}
-html[data-arrivo='caffe'] .copertura--caffe,
-html[data-arrivo='cielo'] .copertura--cielo {
-  opacity: 1;
-  animation: svela 0.55s var(--curva-arrivo) 0.05s forwards;
-}
-@keyframes svela { to { opacity: 0; } }
-html[data-arrivo] .pagina__testa > * {
-  animation: sale 0.7s var(--curva-arrivo) both;
-}
-html[data-arrivo] .pagina__testa > *:nth-child(2) { animation-delay: 0.06s; }
-html[data-arrivo] .pagina__testa > *:nth-child(3) { animation-delay: 0.12s; }
-html[data-arrivo] .pagina__testa > *:nth-child(4) { animation-delay: 0.18s; }
-@keyframes sale {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: none; }
+/* ── Ingressi ──────────────────────────────────────────────────────────────
+   Con la classe `moto` (messa in <head>, vedi Base.astro) gli elementi che entrano
+   in scena partono nascosti: è GSAP a mostrarli. Senza script restano visibili. */
+html.moto [data-entra],
+html.moto [data-entra-figli] > * { visibility: hidden; }
+.riga { will-change: transform; }
+
+/* ── Strato delle transizioni di scena (vedi src/lib/scena.ts) ───────────── */
+.scena { position: fixed; inset: 0; z-index: 60; pointer-events: none; display: none; overflow: hidden; contain: strict; }
+.scena--attiva { display: block; pointer-events: auto; }
+.scena__pieno { position: absolute; inset: 0; width: 100%; height: 100%; will-change: clip-path; }
+.scena__centrato { position: absolute; max-width: none; will-change: transform; }
+
+.scena__oro { background: conic-gradient(from 20deg, #f3cc6a, #dca62e, #fbe6a8, #b9861f, #f3cc6a, #dca62e, #fbe6a8, #b9861f, #f3cc6a); backface-visibility: visible; }
+
+.scena__muro { position: absolute; inset: 0; display: grid; perspective: 900px; }
+.scena__tasto { display: grid; padding: 4px; will-change: transform; }
+.scena__cappello {
+  display: grid; place-items: center; border-radius: 12px;
+  background: #3a4060; color: transparent;
+  box-shadow: inset 0 -5px 0 #2e3350, inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 2px 0 #12152a;
+  font-family: var(--font-mono); font-weight: 500; font-size: clamp(18px, 2.4vw, 30px); padding-bottom: 5px;
 }
 
+.scena__carta {
+  position: absolute; top: -7vh; height: 114vh; border-radius: 26px; background: #3d6bc2;
+  box-shadow: 0 0 0 1px rgba(15, 28, 64, 0.35), 0 30px 60px -20px rgba(15, 28, 64, 0.6);
+  will-change: transform; backface-visibility: hidden;
+}
+.scena__carta-cornice { position: absolute; inset: 9vh 14px; border: 2px solid #f3cc6a; border-radius: 16px; opacity: 0.9; }
+.scena__carta-cornice::after {
+  content: ''; position: absolute; inset: 8px; border-radius: 10px; opacity: 0.5;
+  background-image: repeating-linear-gradient(45deg, transparent 0 11px, #f3cc6a 11px 12px), repeating-linear-gradient(-45deg, transparent 0 11px, #f3cc6a 11px 12px);
+}
+.scena__carta-seme { position: absolute; left: 50%; top: 50%; width: 46%; aspect-ratio: 1; max-width: 110px; background: #f3cc6a; transform: translate(-50%, -50%) rotate(45deg) scale(0.72, 1); border-radius: 6px; box-shadow: 0 0 0 10px #3d6bc2; }
+
+.scena__ghiera { position: absolute; border-radius: 50%; }
+
+.scena__vetro {
+  position: absolute; border-radius: 50%; border-style: solid; border-color: #1a1d2b;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.4), rgba(191, 217, 247, 0.14) 50%, rgba(127, 176, 232, 0.24) 100%);
+  box-shadow: inset 0 0 0 1.5px #f3cc6a, 0 20px 40px -10px rgba(26, 29, 43, 0.5);
+  will-change: transform;
+}
+.scena__velo { background-color: rgba(191, 217, 247, 0.22); }
+
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.15s !important;
   }
-  html[data-arrivo] .pagina__testa > * { animation: none; }
 }
